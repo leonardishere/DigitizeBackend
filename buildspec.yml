@@ -6,8 +6,6 @@ phases:
       python: 3.8
     commands:
 
-      - which python
-      - python --version
       # Upgrade pip and AWS CLI to the latest version
       - pip install --upgrade pip
       - pip install --upgrade awscli

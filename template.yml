@@ -60,3 +60,28 @@ Resources:
       ManagedPolicyArns:
         - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
       PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'
+  DigitizeStudents:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: DigitizeStudents
+      AttributeDefinitions:
+        - AttributeName: StudentID
+          AttributeType: S
+        - AttributeName: CardID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: StudentID
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: CardID
+          KeySchema:
+            - AttributeName: CardID
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: Project
+          Value: Digitize
+        - Key: Name
+          Value: DigitizeStudents

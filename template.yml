@@ -24,6 +24,21 @@ Globals:
       Role: !Ref CodeDeployRole
 
 Resources:
+  GetAllFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: get_all.handler
+      Runtime: python3.7
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /students/
+            Method: get
   HelloWorld:
     Type: AWS::Serverless::Function
     Properties:

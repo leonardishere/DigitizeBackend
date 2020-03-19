@@ -13,7 +13,7 @@ class TestHandlerCase(unittest.TestCase):
         print(result)
         self.assertEqual(result['statusCode'], 200)
         self.assertEqual(result['headers']['Content-Type'], 'application/json')
-        self.assertIn('GET /students/', result['body'])
+        self.assertIn('Andrew', result['body'])
 
 
 if __name__ == '__main__':

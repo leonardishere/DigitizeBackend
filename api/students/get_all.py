@@ -1,11 +1,24 @@
 import json
-import datetime
+import boto3
+import os
+import sys
+sys.path.append(os.path.join(os.curdir, "entities"))
+from student import Student
 
-def handler(event, context):
-    data = {
-        'output': 'Hello World from GET /students/',
-        'timestamp': datetime.datetime.utcnow().isoformat()
-    }
+# initiating the dynamodb client takes >200 ms. moving out here to init once and persist
+dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
+
+def get_students():
+    arr = dynamodb_client.scan(
+        TableName='DigitizeStudents'
+    )['Items']
+    arr = [Student(student) for student in arr]
+    arr.sort(key=lambda student: student.Name)
+    data = [student.to_json() for student in arr]
     return {'statusCode': 200,
             'body': json.dumps(data),
             'headers': {'Content-Type': 'application/json'}}
+
+# Lambda handler
+def handler(event, context):
+    return get_students()

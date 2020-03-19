@@ -24,10 +24,10 @@ Globals:
       Role: !Ref CodeDeployRole
 
 Resources:
-  GetAllFunction:
+  StudentsGetAllFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: DigitizeGetAllStudents
+      FunctionName: DigitizeStudentsGetAll
       Handler: api/students/get_all.handler
       Runtime: python3.7
       MemorySize: 128

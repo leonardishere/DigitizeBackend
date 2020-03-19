@@ -1,11 +1,11 @@
 import json
 import boto3
-import os
+#import os
 import sys
-sys.path.append(os.path.join(os.curdir, "entities"))
-sys.path.append(os.path.join(os.curdir, "imports"))
-from student import Student
 
+sys.path.append('/opt')         # layer location of dependencies
+sys.path.append('dependencies') # local location of dependencies
+from student import Student
 from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.core import patch
 xray_recorder.configure(context_missing='LOG_ERROR')

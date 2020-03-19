@@ -6,10 +6,10 @@ import sys
 sys.path.append('/opt')         # layer location of dependencies
 sys.path.append('dependencies') # local location of dependencies
 from student import Student
-from aws_xray_sdk.core import xray_recorder
-from aws_xray_sdk.core import patch
-xray_recorder.configure(context_missing='LOG_ERROR')
-patch(['boto3'])
+#from aws_xray_sdk.core import xray_recorder
+#from aws_xray_sdk.core import patch
+#xray_recorder.configure(context_missing='LOG_ERROR')
+#patch(['boto3'])
 
 # initiating the dynamodb client takes >200 ms. moving out here to init once and persist
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')

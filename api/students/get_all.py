@@ -3,6 +3,7 @@ import boto3
 import os
 import sys
 sys.path.append(os.path.join(os.curdir, "entities"))
+sys.path.append(os.path.join(os.curdir, "imports"))
 from student import Student
 
 from aws_xray_sdk.core import xray_recorder

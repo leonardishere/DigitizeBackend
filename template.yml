@@ -31,6 +31,7 @@ Resources:
       Handler: api/students/get_all.handler
       Runtime: python3.7
       MemorySize: 128
+      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole

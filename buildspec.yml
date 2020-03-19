@@ -8,7 +8,7 @@ phases:
       - pip install --upgrade pip    # upgrade pip
       - pip install --upgrade awscli # upgrade AWS CLI
       - pip install boto3            # install boto3
-      - pip install aws-xray-sdk     # install x-ray
+      #- pip install aws-xray-sdk     # install x-ray
   pre_build:
     commands:
 

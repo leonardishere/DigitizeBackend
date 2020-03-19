@@ -7,10 +7,7 @@ from student import Student
 
 from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.core import patch_all
-xray_recorder.configure(
-    aws_xray_tracing_name='DigitizeBackend',
-    context_missing='LOG_ERROR'
-)
+xray_recorder.configure(context_missing='LOG_ERROR')
 patch_all()
 
 # initiating the dynamodb client takes >200 ms. moving out here to init once and persist

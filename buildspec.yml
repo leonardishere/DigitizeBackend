@@ -7,8 +7,8 @@ phases:
     commands:
       - pip install --upgrade pip    # upgrade pip
       - pip install --upgrade awscli # upgrade AWS CLI
-      - pip install boto3            # install boto3
-      - pip install aws-xray-sdk     # install x-ray
+      #- pip install boto3            # install boto3
+      #- pip install aws-xray-sdk     # install x-ray
   pre_build:
     commands:
 
@@ -17,8 +17,8 @@ phases:
 
   build:
     commands:
-      - pip install boto3            # install boto3
-      - pip install aws-xray-sdk     # install x-ray
+      #- pip install boto3            # install boto3
+      #- pip install aws-xray-sdk     # install x-ray
       # Use AWS SAM to package the application by using AWS CloudFormation
       - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
 

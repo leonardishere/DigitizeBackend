@@ -5,11 +5,9 @@ phases:
     runtime-versions:
       python: 3.8
     commands:
-
-      # Upgrade pip and AWS CLI to the latest version
-      - pip install --upgrade pip
-      - pip install --upgrade awscli
-
+      - pip install --upgrade pip    # upgrade pip
+      - pip install --upgrade awscli # upgrade AWS CLI
+      - pip install boto3            # install boto3
   pre_build:
     commands:
 

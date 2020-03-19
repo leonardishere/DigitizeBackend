@@ -28,7 +28,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeGetAllStudents
-      Handler: students/get_all.handler
+      Handler: api/students/get_all.handler
       Runtime: python3.7
       MemorySize: 128
       Role:

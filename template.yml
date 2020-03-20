@@ -118,25 +118,25 @@ Resources:
             Path: /students/studentid/{StudentID}/
             Method: get
             RestApiId: !Ref RestApi
-  StudentsOptionsStudentIDFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: DigitizeStudentsOptionsStudentID
-      Handler: api/options.handler
-      Runtime: python3.7
-      MemorySize: 128
-      Tracing: Active
-      Role:
-        Fn::GetAtt:
-          - LambdaExecutionRole
-          - Arn
-      Events:
-        GetEvent:
-          Type: Api
-          Properties:
-            Path: /students/studentid/{StudentID}
-            Method: options
-            RestApiId: !Ref RestApi
+  #StudentsOptionsStudentIDFunction:
+  #  Type: AWS::Serverless::Function
+  #  Properties:
+  #    FunctionName: DigitizeStudentsOptionsStudentID
+  #    Handler: api/options.handler
+  #    Runtime: python3.7
+  #    MemorySize: 128
+  #    Tracing: Active
+  #    Role:
+  #      Fn::GetAtt:
+  #        - LambdaExecutionRole
+  #        - Arn
+  #    Events:
+  #      GetEvent:
+  #        Type: Api
+  #        Properties:
+  #          Path: /students/studentid/{StudentID}
+  #          Method: options
+  #          RestApiId: !Ref RestApi
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda
     Type: AWS::IAM::Role

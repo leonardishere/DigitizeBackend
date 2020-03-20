@@ -17,7 +17,12 @@ def get_students():
     data = [student.to_json() for student in arr]
     return {'statusCode': 200,
             'body': json.dumps(data),
-            'headers': {'Content-Type': 'application/json'}}
+            'headers': {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "https://digitize.aleonard.dev",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+            }}
 
 # Lambda handler
 def handler(event, context):

@@ -29,6 +29,13 @@ class Student:
         return json.dumps(self.to_json())
 
     def to_json(self):
+        return json.dumps({
+            'Name': self.Name,
+            'StudentID': self.StudentID,
+            'CardID': self.CardID
+        })
+
+    def to_dict(self):
         return {
             'Name': self.Name,
             'StudentID': self.StudentID,

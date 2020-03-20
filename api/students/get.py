@@ -8,6 +8,13 @@ from student import Student
 # initiating the dynamodb client takes >200 ms. moving out here to init once and persist
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
 
+headers = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "https://digitize.aleonard.dev",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+}
+
 def get_students():
     arr = dynamodb_client.scan(
         TableName='DigitizeStudents'
@@ -17,12 +24,7 @@ def get_students():
     data = [student.to_json() for student in arr]
     return {'statusCode': 200,
             'body': json.dumps(data),
-            'headers': {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "https://digitize.aleonard.dev",
-                "Access-Control-Allow-Headers": "Content-Type",
-                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-            }}
+            'headers': headers}
 
 # Lambda handler
 def handler(event, context):

@@ -46,7 +46,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeStudentsGetAll
-      Handler: api/students/get_all.handler
+      Handler: api/students/get.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -60,6 +60,25 @@ Resources:
           Properties:
             Path: /students/
             Method: get
+            RestApiId: !Ref RestApi
+  StudentsOptionsAllFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DigitizeStudentsOptionsAll
+      Handler: api/students/options.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /students/
+            Method: options
             RestApiId: !Ref RestApi
   HelloWorld:
     Type: AWS::Serverless::Function

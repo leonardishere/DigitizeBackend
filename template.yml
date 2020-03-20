@@ -30,8 +30,6 @@ Resources:
       FunctionName: DigitizeStudentsGetAll
       Handler: api/students/get_all.handler
       Runtime: python3.7
-      Layers:
-        - !Ref DependenciesLayer
       MemorySize: 128
       Tracing: Active
       Role:
@@ -44,17 +42,6 @@ Resources:
           Properties:
             Path: /students/
             Method: get
-  DependenciesLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: DependenciesLayer
-      Description: Dependencies for DigitizeBackend
-      ContentUri: dependencies/
-      CompatibleRuntimes:
-        - python3.6
-        - python3.7
-        - python3.8
-      RetentionPolicy: Retain
   HelloWorld:
     Type: AWS::Serverless::Function
     Properties:

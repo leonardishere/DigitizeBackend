@@ -30,6 +30,7 @@ Globals:
       AllowOrigin: "'https://digitize.aleonard.dev'"
 
 Resources:
+  # API
   RestApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -41,6 +42,7 @@ Resources:
           HostedZoneId: Z21QA4NBX4IRX8
       StageName: prod
       TracingEnabled: true
+  # Functions
   OptionsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -136,6 +138,7 @@ Resources:
             Path: /students/cardid/{CardID}/
             Method: get
             RestApiId: !Ref RestApi
+  # IAM Role
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda
     Type: AWS::IAM::Role
@@ -153,6 +156,7 @@ Resources:
         - arn:aws:iam::917159232232:policy/XRayPutTraceSegments
         - arn:aws:iam::917159232232:policy/DynamoDBCRUD
       #PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'
+  # Tables
   DigitizeStudents:
     Type: 'AWS::DynamoDB::Table'
     Properties:
@@ -181,19 +185,19 @@ Resources:
   DigitizeActiveCheckins:
     Type: 'AWS::DynamoDB::Table'
     Properties:
-      TableName: DigitizeActiveCheckins
+      TableName: DigitizeActiveCheckinsTemp
       AttributeDefinitions:
         - AttributeName: CardReaderID
           AttributeType: N
-        - AttributeName: StudentID
+        - AttributeName: CardID
           AttributeType: S
       KeySchema:
         - AttributeName: CardReaderID
           KeyType: HASH
       GlobalSecondaryIndexes:
-        - IndexName: StudentID
+        - IndexName: CardID
           KeySchema:
-            - AttributeName: StudentID
+            - AttributeName: CardID
               KeyType: HASH
           Projection:
             ProjectionType: ALL
@@ -203,3 +207,4 @@ Resources:
           Value: Digitize
         - Key: Name
           Value: DigitizeActiveCheckins
+      DependsOn: DigitizeStudents

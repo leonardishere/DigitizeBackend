@@ -207,4 +207,4 @@ Resources:
           Value: Digitize
         - Key: Name
           Value: DigitizeActiveCheckins
-      DependsOn: DigitizeStudents
+    DependsOn: DigitizeStudents

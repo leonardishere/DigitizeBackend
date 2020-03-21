@@ -185,7 +185,7 @@ Resources:
   DigitizeActiveCheckins:
     Type: 'AWS::DynamoDB::Table'
     Properties:
-      TableName: DigitizeActiveCheckinsTemp
+      TableName: DigitizeActiveCheckins
       AttributeDefinitions:
         - AttributeName: CardReaderID
           AttributeType: N

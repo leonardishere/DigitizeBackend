@@ -10,7 +10,7 @@ class ActiveCheckin:
         self.CardID = item.get('CardID').get('S')
 
     def __repr__(self):
-        return json.dumps(self.to_json())
+        return json.dumps(self.to_dict())
 
     def to_dict(self):
         return {

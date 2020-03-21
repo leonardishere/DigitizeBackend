@@ -19,7 +19,7 @@ headers = {
 
 def post_student(student):
     try:
-        student = student.to_json()
+        student = student.to_dict()
         response = table.put_item(Item=student)
         return {'statusCode': 200,
                 'body': '',

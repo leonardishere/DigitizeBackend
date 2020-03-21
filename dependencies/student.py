@@ -26,7 +26,7 @@ class Student:
             self.CardID = self.CardID.get('S')
 
     def __repr__(self):
-        return json.dumps(self.to_json())
+        return json.dumps(self.to_dict())
 
     def to_json(self):
         return json.dumps({

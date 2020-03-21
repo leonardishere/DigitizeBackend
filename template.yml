@@ -182,4 +182,29 @@ Resources:
           Value: Digitize
         - Key: Name
           Value: DigitizeStudents
-  
+  DigitizeActiveCheckins:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: DigitizeActiveCheckins
+      AttributeDefinitions:
+        - AttributeName: CardReaderID
+          AttributeType: N
+        - AttributeName: CardID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: CardReaderID
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: CardID
+          KeySchema:
+            - AttributeName: CardID
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: Project
+          Value: Digitize
+        - Key: Name
+          Value: DigitizeActiveCheckins
+    DependsOn: DigitizeStudents # multiple GSIs require serial creation

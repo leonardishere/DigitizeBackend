@@ -19,10 +19,10 @@ headers = {
 def get_active_checkin(cardreaderid):
     try:
         response = dynamodb_client.query(
-            TableName='DigitizeStudents',
+            TableName='DigitizeActiveCheckins',
             KeyConditionExpression="CardReaderID=:cardreaderid",
             ExpressionAttributeValues={
-                ":cardreaderid": { "S": cardreaderid }
+                ":cardreaderid": { "N": cardreaderid }
             },
             ScanIndexForward=True
         )
@@ -48,7 +48,7 @@ def get_active_checkin(cardreaderid):
         return {'statusCode': 500,
                 'body': json.dumps({'Error': str(e)}),
                 'headers': headers}
-                
+
 # Lambda handler
 def handler(event, context):
     return get_active_checkin(event['pathParameters']['CardReaderID'])

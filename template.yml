@@ -176,6 +176,25 @@ Resources:
             Path: /checkins/active/cardreaderid/{CardReaderID}/
             Method: get
             RestApiId: !Ref RestApi
+  CheckinsActiveGetCardIDFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DigitizeCheckinsActiveGetCardID
+      Handler: api/checkins/active/cardid/get.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /checkins/active/cardid/{CardID}/
+            Method: get
+            RestApiId: !Ref RestApi
   # IAM Role
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda

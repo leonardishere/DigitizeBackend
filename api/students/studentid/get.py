@@ -5,10 +5,7 @@ import sys
 sys.path.append('dependencies')
 from student import Student
 
-table = (boto3
-            .resource('dynamodb', region_name='us-west-2')
-            .Table('DigitizeStudents')
-        )
+dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
 
 headers = {
     "Content-Type": "application/json",
@@ -19,14 +16,32 @@ headers = {
 
 def get_student(studentid):
     try:
-        response = table.get_item(Key={'StudentID': studentid})
-        if 'Item' in response:
+        response = dynamodb_client.query(
+            TableName='DigitizeStudents',
+            IndexName='StudentID',
+            KeyConditionExpression="StudentID=:studentid",
+            ExpressionAttributeValues={
+                ":studentid": { "S": studentid }
+            },
+            ScanIndexForward=True
+        )
+        print(response)
+        if len(response['Items']) == 1:
+            student = Student(response['Items'][0])
             return {'statusCode': 200,
-                    'body': json.dumps(response['Item']),
+                    'body': student.to_json(),
+                    'headers': headers}
+        elif len(response['Items']) > 1:
+            students = [Student(student).to_dict() for student in response['Items']]
+            return {'statusCode': 500,
+                    'body': json.dumps({
+                        'Error': 'More than one student found',
+                        'Students': students
+                    }),
                     'headers': headers}
         else:
             return {'statusCode': 404,
-                    'body': json.dumps({'Error': 'Student with StudentID={} not found'.format(studentid)}),
+                    'body': json.dumps({'Error': 'Student with StudentID={} not found'.format(cardid)}),
                     'headers': headers}
     except Exception as e:
         return {'statusCode': 500,

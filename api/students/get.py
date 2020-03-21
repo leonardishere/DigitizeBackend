@@ -21,7 +21,7 @@ def get_students():
     )['Items']
     arr = [Student(student) for student in arr]
     arr.sort(key=lambda student: student.Name)
-    data = [student.to_json() for student in arr]
+    data = [student.to_dict() for student in arr]
     return {'statusCode': 200,
             'body': json.dumps(data),
             'headers': headers}

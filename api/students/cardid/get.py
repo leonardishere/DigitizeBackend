@@ -20,10 +20,8 @@ headers = {
 
 def get_student(cardid):
     try:
-        #response = table.get_item(Key={'CardID': cardid})
         response = dynamodb_client.query(
             TableName='DigitizeStudents',
-            IndexName='CardID',
             KeyConditionExpression="CardID=:cardid",
             ExpressionAttributeValues={
                 ":cardid": { "S": cardid }

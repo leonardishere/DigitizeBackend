@@ -12,7 +12,7 @@ table = (boto3
 
 headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "https://digitize.aleonard.dev",
+    "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
 }

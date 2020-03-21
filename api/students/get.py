@@ -10,7 +10,7 @@ dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
 
 headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "https://digitize.aleonard.dev,localhost",
+    "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev,localhost",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
 }

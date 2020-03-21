@@ -22,13 +22,6 @@ Globals:
       Enabled: true
       Type: Canary10Percent5Minutes
       Role: !Ref CodeDeployRole
-    Runtime: python3.7
-    MemorySize: 128
-    Tracing: Active
-    Role:
-      Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
   Api:
     # Allows an application running at https://digitize.aleonard.dev to call this API
     Cors:
@@ -53,6 +46,13 @@ Resources:
     Properties:
       FunctionName: DigitizeOptionsAll
       Handler: api/options.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
       Events:
         GetEvent:
           Type: Api
@@ -65,6 +65,13 @@ Resources:
     Properties:
       FunctionName: DigitizeStudentsGetAll
       Handler: api/students/get.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
       Events:
         GetEvent:
           Type: Api
@@ -77,6 +84,13 @@ Resources:
     Properties:
       FunctionName: DigitizeStudentsPost
       Handler: api/students/post.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
       Events:
         GetEvent:
           Type: Api
@@ -89,6 +103,13 @@ Resources:
     Properties:
       FunctionName: DigitizeStudentsGetStudentID
       Handler: api/students/studentid/get.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
       Events:
         GetEvent:
           Type: Api
@@ -101,6 +122,13 @@ Resources:
     Properties:
       FunctionName: DigitizeStudentsGetCardID
       Handler: api/students/cardid/get.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
       Events:
         GetEvent:
           Type: Api

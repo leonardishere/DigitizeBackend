@@ -1,8 +1,8 @@
 import unittest
 import os
 import sys
-sys.path.append(os.path.join(os.curdir, "api/students"))
-import get
+#sys.path.append(os.path.join(os.curdir, "api/students"))
+#import get
 
 
 class TestHandlerCase(unittest.TestCase):

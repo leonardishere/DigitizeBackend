@@ -62,6 +62,7 @@ Resources:
             Path: /
             Method: options
             RestApiId: !Ref RestApi
+  # Functions - Students
   StudentsGetAllFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -138,6 +139,7 @@ Resources:
             Path: /students/studentid/{StudentID}/
             Method: get
             RestApiId: !Ref RestApi
+  # Functions - Checkins
   CheckinsActiveGetAllFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -156,6 +158,25 @@ Resources:
           Properties:
             Path: /checkins/active/
             Method: get
+            RestApiId: !Ref RestApi
+  CheckinsPostFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DigitizeCheckinsActivePost
+      Handler: api/checkins/post.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /checkins/
+            Method: post
             RestApiId: !Ref RestApi
   CheckinsActiveGetCardReaderIDFunction:
     Type: AWS::Serverless::Function

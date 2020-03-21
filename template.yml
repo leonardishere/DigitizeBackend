@@ -22,6 +22,13 @@ Globals:
       Enabled: true
       Type: Canary10Percent5Minutes
       Role: !Ref CodeDeployRole
+    Runtime: python3.7
+    MemorySize: 128
+    Tracing: Active
+    Role:
+      Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
   Api:
     # Allows an application running at https://digitize.aleonard.dev to call this API
     Cors:
@@ -41,18 +48,23 @@ Resources:
           HostedZoneId: Z21QA4NBX4IRX8
       StageName: prod
       TracingEnabled: true
+  OptionsAllFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DigitizeOptionsAll
+      Handler: api/options.handler
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /
+            Method: options
+            RestApiId: !Ref RestApi
   StudentsGetAllFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeStudentsGetAll
       Handler: api/students/get.handler
-      Runtime: python3.7
-      MemorySize: 128
-      Tracing: Active
-      Role:
-        Fn::GetAtt:
-          - LambdaExecutionRole
-          - Arn
       Events:
         GetEvent:
           Type: Api
@@ -65,13 +77,6 @@ Resources:
     Properties:
       FunctionName: DigitizeStudentsPost
       Handler: api/students/post.handler
-      Runtime: python3.7
-      MemorySize: 128
-      Tracing: Active
-      Role:
-        Fn::GetAtt:
-          - LambdaExecutionRole
-          - Arn
       Events:
         GetEvent:
           Type: Api
@@ -79,37 +84,11 @@ Resources:
             Path: /students/
             Method: post
             RestApiId: !Ref RestApi
-  StudentsOptionsAllFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: DigitizeStudentsOptionsAll
-      Handler: api/options.handler
-      Runtime: python3.7
-      MemorySize: 128
-      Tracing: Active
-      Role:
-        Fn::GetAtt:
-          - LambdaExecutionRole
-          - Arn
-      Events:
-        GetEvent:
-          Type: Api
-          Properties:
-            Path: /students/
-            Method: options
-            RestApiId: !Ref RestApi
   StudentsGetStudentIDFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeStudentsGetStudentID
       Handler: api/students/studentid/get.handler
-      Runtime: python3.7
-      MemorySize: 128
-      Tracing: Active
-      Role:
-        Fn::GetAtt:
-          - LambdaExecutionRole
-          - Arn
       Events:
         GetEvent:
           Type: Api
@@ -122,13 +101,6 @@ Resources:
     Properties:
       FunctionName: DigitizeStudentsGetCardID
       Handler: api/students/cardid/get.handler
-      Runtime: python3.7
-      MemorySize: 128
-      Tracing: Active
-      Role:
-        Fn::GetAtt:
-          - LambdaExecutionRole
-          - Arn
       Events:
         GetEvent:
           Type: Api

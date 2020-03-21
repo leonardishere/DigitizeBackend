@@ -160,8 +160,6 @@ Resources:
           AttributeType: S
         - AttributeName: StudentID
           AttributeType: S
-        - AttributeName: Name
-          AttributeType: S
       KeySchema:
         - AttributeName: CardID
           KeyType: HASH

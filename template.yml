@@ -41,10 +41,10 @@ Resources:
           HostedZoneId: Z21QA4NBX4IRX8
       StageName: prod
       TracingEnabled: true
-  OptionsAllFunction:
+  OptionsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: DigitizeOptionsAll
+      FunctionName: DigitizeOptions
       Handler: api/options.handler
       Runtime: python3.7
       MemorySize: 128

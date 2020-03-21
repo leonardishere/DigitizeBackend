@@ -27,7 +27,7 @@ Globals:
     Cors:
       AllowMethods: "'OPTIONS,POST,GET'"
       AllowHeaders: "'Content-Type'"
-      AllowOrigin: "'https://digitize.aleonard.dev'"
+      AllowOrigin: "'https://digitize.aleonard.dev','localhost'"
 
 Resources:
   # API

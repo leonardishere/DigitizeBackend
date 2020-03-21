@@ -27,7 +27,6 @@ def get_active_checkin(cardid):
             },
             ScanIndexForward=True
         )
-        print(response)
         if len(response['Items']) == 1:
             checkin = ActiveCheckin(response['Items'][0])
             return {'statusCode': 200,

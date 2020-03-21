@@ -25,7 +25,6 @@ def get_student(studentid):
             },
             ScanIndexForward=True
         )
-        print(response)
         if len(response['Items']) == 1:
             student = Student(response['Items'][0])
             return {'statusCode': 200,

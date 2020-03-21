@@ -8,7 +8,6 @@ type_atts = {'Name': 'S', 'StudentID': 'S', 'CardID': 'S'}
 
 class Student:
     def __init__(self, item):
-        print('item:', item)
         self.item = item
         if item is None:
             raise Exception(null_notice)

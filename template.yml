@@ -154,7 +154,7 @@ Resources:
   DigitizeStudents:
     Type: 'AWS::DynamoDB::Table'
     Properties:
-      TableName: DigitizeStudents
+      TableName: DigitizeStudentsTemp
       AttributeDefinitions:
         - AttributeName: CardID
           AttributeType: S

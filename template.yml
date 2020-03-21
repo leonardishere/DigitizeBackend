@@ -156,17 +156,19 @@ Resources:
     Properties:
       TableName: DigitizeStudents
       AttributeDefinitions:
-        - AttributeName: StudentID
-          AttributeType: S
         - AttributeName: CardID
           AttributeType: S
-      KeySchema:
         - AttributeName: StudentID
+          AttributeType: S
+        - AttributeName: Name
+          AttributeType: S
+      KeySchema:
+        - AttributeName: CardID
           KeyType: HASH
       GlobalSecondaryIndexes:
-        - IndexName: CardID
+        - IndexName: StudentID
           KeySchema:
-            - AttributeName: CardID
+            - AttributeName: StudentID
               KeyType: HASH
           Projection:
             ProjectionType: ALL

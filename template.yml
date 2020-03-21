@@ -100,25 +100,6 @@ Resources:
             Path: /students/
             Method: post
             RestApiId: !Ref RestApi
-  StudentsGetStudentIDFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: DigitizeStudentsGetStudentID
-      Handler: api/students/studentid/get.handler
-      Runtime: python3.7
-      MemorySize: 128
-      Tracing: Active
-      Role:
-        Fn::GetAtt:
-          - LambdaExecutionRole
-          - Arn
-      Events:
-        GetEvent:
-          Type: Api
-          Properties:
-            Path: /students/studentid/{StudentID}/
-            Method: get
-            RestApiId: !Ref RestApi
   StudentsGetCardIDFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -138,6 +119,25 @@ Resources:
             Path: /students/cardid/{CardID}/
             Method: get
             RestApiId: !Ref RestApi
+  StudentsGetStudentIDFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DigitizeStudentsGetStudentID
+      Handler: api/students/studentid/get.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /students/studentid/{StudentID}/
+            Method: get
+            RestApiId: !Ref RestApi
   CheckinsActiveGetAllFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -155,6 +155,25 @@ Resources:
           Type: Api
           Properties:
             Path: /checkins/active/
+            Method: get
+            RestApiId: !Ref RestApi
+  CheckinsActiveGetCardReaderIDFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DigitizeCheckinsActiveGetCardReaderID
+      Handler: api/checkins/active/cardreaderid/get.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /checkins/active/cardreaderid/{CardReaderID}/
             Method: get
             RestApiId: !Ref RestApi
   # IAM Role

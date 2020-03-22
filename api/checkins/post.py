@@ -147,18 +147,6 @@ def get_student_by_cardid(cardid):
     )
     return [Student(student) for student in response['Items']]
 
-def post_student(student):
-    try:
-        student = student.to_dict()
-        response = table.put_item(Item=student)
-        return {'statusCode': 200,
-                'body': '',
-                'headers': headers}
-    except Exception as e:
-        return {'statusCode': 500,
-                'body': {'Error': str(e)},
-                'headers': headers}
-
 # Lambda handler
 def handler(event, context):
     if not event or not 'body' in event or not event['body']:

@@ -216,6 +216,25 @@ Resources:
             Path: /checkins/active/cardid/{CardID}/
             Method: get
             RestApiId: !Ref RestApi
+  CheckinsInactiveGetAllFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DigitizeCheckinsInactiveGetAll
+      Handler: api/checkins/inactive/get.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /checkins/inactive/
+            Method: get
+            RestApiId: !Ref RestApi
   CheckoutAllFunction:
     Type: AWS::Serverless::Function
     Properties:

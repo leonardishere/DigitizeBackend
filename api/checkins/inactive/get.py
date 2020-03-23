@@ -21,7 +21,7 @@ def get_inactive_checkins():
         TableName='DigitizeInactiveCheckins'
     )['Items']
     arr = [InactiveCheckin(checkin) for checkin in arr]
-    arr.sort(key=lambda checkin: checkin.CheckoutTime)
+    arr.sort(key=lambda checkin: -checkin.CheckoutTime)
     data = [checkin.to_dict() for checkin in arr]
     return {'statusCode': 200,
             'body': json.dumps(data),

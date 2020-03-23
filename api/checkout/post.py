@@ -51,7 +51,7 @@ def delete_active_checkin(cardreaderid):
 def write_inactive_checkins(active_checkins):
     if len(active_checkins) == 0:
         return
-    curtime = str(int(time()))
+    curtime = str(int(time()*1000))
     items = list(map(lambda checkin: {
         'PutRequest': {
             'Item': {

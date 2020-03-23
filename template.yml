@@ -315,7 +315,7 @@ Resources:
         - AttributeName: CheckinTime
           AttributeType: N
       KeySchema:
-        - AttributeName: CardReaderID
+        - AttributeName: StudentID
           KeyType: HASH
         - AttributeName: CheckinTime
           KeyType: RANGE

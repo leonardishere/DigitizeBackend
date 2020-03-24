@@ -489,10 +489,15 @@ Resources:
   SendMessageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: sendmessage/
-      Handler: app.handler
-      MemorySize: 256
-      Runtime: nodejs12.x
+      FunctionName: SendMessageFunction
+      Handler: sendmessage/post.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
       Environment:
         Variables:
           TABLE_NAME: DigitizeConnections

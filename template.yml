@@ -420,7 +420,7 @@ Resources:
     - DisconnectRoute
     Properties:
       ApiId: !Ref SimpleChatWebSocket
-  Stage:
+  GWStage:
     Type: AWS::ApiGatewayV2::Stage
     Properties:
       StageName: Prod

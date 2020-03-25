@@ -520,6 +520,28 @@ Resources:
       FunctionName: !Ref SendMessageFunction
       Principal: apigateway.amazonaws.com
 
+  # TODO: delete this
+  BroadcastFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: Broadcast
+      Handler: broadcast.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Timeout: 20
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /broadcast/
+            Method: post
+            RestApiId: !Ref RestApi
+
 Outputs:
   ConnectionsTableArn:
     Description: "Connections table ARN"

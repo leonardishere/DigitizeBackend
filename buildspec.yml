@@ -9,6 +9,7 @@ phases:
       - pip install --upgrade awscli # upgrade AWS CLI
       - pip install boto3            # install boto3
       - pip install aws-xray-sdk     # install x-ray
+      - pip install awscurl          # install awscurl
   pre_build:
     commands:
 

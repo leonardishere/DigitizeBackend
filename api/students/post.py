@@ -38,3 +38,4 @@ def handler(event, context):
                 'body': {'Error': str(e)},
                 'headers': headers}
     return post_student(student)
+    

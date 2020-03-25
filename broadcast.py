@@ -24,7 +24,7 @@ def get_connections():
 def broadcast(message, connections):
     for connection in connections:
         subprocess.run([
-            "awscurl",
+            "python", "-m", "awscurl",
             "--region", "us-west-2",
             "-X", "POST",
             "-d", message,
@@ -44,6 +44,6 @@ def handler(event, context):
     except Exception as e:
         return {
             'statusCode': 500,
-            'body': json.dumps({'Error': str(e)})
+            'body': json.dumps({'Error': str(e)}),
             'headers': headers
         }

@@ -173,19 +173,26 @@ def write_inactive_checkin(active_checkin):
 
 # Lambda handler
 def handler(event, context):
-    if not event or not 'body' in event or not event['body']:
+    try:
+        if not event or not 'body' in event or not event['body']:
+            return {
+                'statusCode': 400,
+                'body': '{"Error": "No event body"}',
+                'headers': headers
+            }
+        req = json.loads(event['body'])
+        if 'CardReaderID' not in req or 'CardID' not in req:
+            return {
+                'statusCode': 400,
+                'body': '{"Error": "Required parameters: CardReaderID, CardID"}',
+                'headers': headers
+            }
+        cardreaderid = str(req['CardReaderID'])
+        cardid = req['CardID']
+        return checkin(cardreaderid, cardid)
+    except Exception as e:
         return {
-            'statusCode': 400,
-            'body': '{"Error": "No event body"}',
+            'statusCode': 500,
+            'body': json.dumps({'Error': str(e)})
             'headers': headers
         }
-    req = json.loads(event['body'])
-    if 'CardReaderID' not in req or 'CardID' not in req:
-        return {
-            'statusCode': 400,
-            'body': '{"Error": "Required parameters: CardReaderID, CardID"}',
-            'headers': headers
-        }
-    cardreaderid = str(req['CardReaderID'])
-    cardid = req['CardID']
-    return checkin(cardreaderid, cardid)

@@ -33,10 +33,17 @@ def broadcast(message, connections):
 
 # Lambda handler
 def handler(event, context):
-    message = event['body']
-    connections = get_connections()
-    broadcast(message, connections)
-    return {
-        'statusCode': 200,
-        'headers': headers
-    }
+    try:
+        message = event['body']
+        connections = get_connections()
+        broadcast(message, connections)
+        return {
+            'statusCode': 200,
+            'headers': headers
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'Error': str(e)})
+            'headers': headers
+        }

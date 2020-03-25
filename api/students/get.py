@@ -28,4 +28,11 @@ def get_students():
 
 # Lambda handler
 def handler(event, context):
-    return get_students()
+    try:
+        return get_students()
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'Error': str(e)})
+            'headers': headers
+        }

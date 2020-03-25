@@ -29,4 +29,11 @@ def get_inactive_checkins():
 
 # Lambda handler
 def handler(event, context):
-    return get_inactive_checkins()
+    try:
+        return get_inactive_checkins()
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'Error': str(e)})
+            'headers': headers
+        }

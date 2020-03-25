@@ -49,4 +49,11 @@ def get_student(studentid):
 
 # Lambda handler
 def handler(event, context):
-    return get_student(event['pathParameters']['StudentID'])
+    try:
+        return get_student(event['pathParameters']['StudentID'])
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'Error': str(e)})
+            'headers': headers
+        }

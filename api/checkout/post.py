@@ -71,4 +71,11 @@ def write_inactive_checkins(active_checkins):
 
 # Lambda handler
 def handler(event, context):
-    return checkout()
+    try:
+        return checkout()
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'Error': str(e)})
+            'headers': headers
+        }

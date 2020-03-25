@@ -51,4 +51,11 @@ def get_active_checkin(cardid):
 
 # Lambda handler
 def handler(event, context):
-    return get_active_checkin(event['pathParameters']['CardID'])
+    try:
+        return get_active_checkin(event['pathParameters']['CardID'])
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'Error': str(e)})
+            'headers': headers
+        }

@@ -1,19 +1,5 @@
-import json
-import boto3
-import sys
-sys.path.append('dependencies') # local location of dependencies
-#import awscurl # modified
-from myawscurl import myawscurl
-
-dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
-#gwmapi = boto3.client('apigatewaymanagementapi', region_name='us-west-2')
-
-headers = {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-}
+dynamodb_client = None
+headers = None
 
 def get_connections():
     connections = dynamodb_client.scan(
@@ -38,6 +24,24 @@ def broadcast(message, connections):
 # Lambda handler
 def handler(event, context):
     try:
+
+        import json
+        import boto3
+        import sys
+        sys.path.append('dependencies') # local location of dependencies
+        #import awscurl # modified
+        from myawscurl import myawscurl
+
+        dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
+        #gwmapi = boto3.client('apigatewaymanagementapi', region_name='us-west-2')
+
+        headers = {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+        }
+
         message = event['body']
         print('message:', message)
         connections = get_connections()

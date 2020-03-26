@@ -12,6 +12,7 @@ import pprint
 import sys
 import re
 import requests
+import boto3
 
 def sha256_hash(val):
     """
@@ -349,167 +350,14 @@ def __send_request(uri, data, headers, method, verify):
 
     return response
 
+def get_credentials(sts=None):
+    if sts is None:
+        sts = boto3.client('sts', region_name='us-west-2')
+    res = sts.assume_role(RoleArn='arn:aws:iam::917159232232:role/CodeStar-digitizebackend-Execution', RoleSessionName='SessionOne', DurationSeconds=900)
+    creds = res['Credentials']
+    return creds['AccessKeyId'], creds['SecretAccessKey'], creds['SessionToken']
 
-# pylint: disable=too-many-branches
-def load_aws_config(access_key, secret_key, security_token, credentials_path, profile):
-    # type: (str, str, str, str, str) -> Tuple[str, str, str]
-    """
-    Load aws credential configuration, by parsing credential file, then try to fall back to
-    botocore, by checking (access_key,secret_key) are not (None,None)
-    """
-    if access_key is None or secret_key is None:
-        try:
-            exists = os.path.exists(credentials_path)
-            __log('Credentials file \'{0}\' exists \'{1}\''.format(credentials_path, exists))
-
-            config = configparser.ConfigParser()
-            config.read(credentials_path)
-
-            while True:
-                if access_key is None and config.has_option(profile, "aws_access_key_id"):
-                    access_key = config.get(profile, "aws_access_key_id")
-                else:
-                    break
-
-                if secret_key is None and config.has_option(profile, "aws_secret_access_key"):
-                    secret_key = config.get(profile, "aws_secret_access_key")
-                else:
-                    break
-
-                if security_token is None and config.has_option(profile, "aws_session_token"):
-                    security_token = config.get(profile, "aws_session_token")
-
-                break
-
-        except configparser.NoSectionError as exception:
-            __log('AWS profile \'{0}\' not found'.format(exception.args))
-            raise exception
-        except configparser.NoOptionError as exception:
-            __log('AWS profile \'{0}\' is missing \'{1}\''.format(profile, exception.args))
-            raise exception
-        except ValueError as exception:
-            __log(exception)
-            raise exception
-
-    # try to load instance credentials using botocore
-    if access_key is None or secret_key is None:
-        try:
-            __log("loading botocore package")
-            import botocore
-        except ImportError:
-            __log("botocore package could not be loaded")
-            botocore = None
-
-        if botocore:
-            import botocore.session
-            session = botocore.session.get_session()
-            cred = session.get_credentials()
-            access_key, secret_key, security_token = cred.access_key, cred.secret_key, cred.token
-
-    return access_key, secret_key, security_token
-
-
-def inner_main(argv):
-    """
-    Awscurl CLI main entry point
-    """
-    print('received args: ', str(argv))
-    # note EC2 ignores Accept header and responds in xml
-    default_headers = ['Accept: application/xml',
-                       'Content-Type: application/json']
-
-    parser = configargparse.ArgumentParser(
-        description='Curl AWS request signing',
-        formatter_class=configargparse.ArgumentDefaultsHelpFormatter
-    )
-
-    parser.add_argument('-v', '--verbose', action='store_true',
-                        help='verbose flag', default=False)
-    parser.add_argument('-i', '--include', action='store_true',
-                        help='include headers in the output', default=False)
-    parser.add_argument('-X', '--request',
-                        help='Specify request command to use',
-                        default='GET')
-    parser.add_argument('-d', '--data', help='HTTP POST data', default='')
-    parser.add_argument('-H', '--header', help='HTTP header', action='append')
-    parser.add_argument('-k', '--insecure', action='store_false',
-                        help='This option allows awscurl to proceed and operate even for server '
-                             'connections otherwise considered insecure')
-
-    parser.add_argument('--data-binary', action='store_true',
-                        help='Process HTTP POST data exactly as specified with '
-                             'no extra processing whatsoever.', default=False)
-
-    parser.add_argument('--region', help='AWS region', default='us-east-1',
-                        env_var='AWS_DEFAULT_REGION')
-    parser.add_argument('--profile', help='AWS profile', default='default', env_var='AWS_PROFILE')
-    parser.add_argument('--service', help='AWS service', default='execute-api')
-    parser.add_argument('--access_key', env_var='AWS_ACCESS_KEY_ID')
-    parser.add_argument('--secret_key', env_var='AWS_SECRET_ACCESS_KEY')
-    # AWS_SECURITY_TOKEN is deprecated, but kept for backward compatibility
-    # https://github.com/boto/botocore/blob/c76553d3158b083d818f88c898d8f6d7918478fd/botocore/credentials.py#L260-262
-    parser.add_argument('--security_token', env_var='AWS_SECURITY_TOKEN')
-    parser.add_argument('--session_token', env_var='AWS_SESSION_TOKEN')
-
-    parser.add_argument('uri')
-
-    args = parser.parse_args(argv)
-    # pylint: disable=global-statement
-    global IS_VERBOSE
-    IS_VERBOSE = args.verbose
-
-    if args.verbose:
-        __log(vars(args))
-
-    data = args.data
-
-    if data is not None and data.startswith("@"):
-        filename = data[1:]
-        with open(filename, "r") as post_data_file:
-            data = post_data_file.read()
-
-    if args.header is None:
-        args.header = default_headers
-
-    if args.security_token is not None:
-        args.session_token = args.security_token
-        del args.security_token
-
-    # pylint: disable=deprecated-lambda
-    headers = {k: v for (k, v) in map(lambda s: s.split(": "), args.header)}
-
-    credentials_path = os.path.expanduser("~") + "/.aws/credentials"
-    args.access_key, args.secret_key, args.session_token = load_aws_config(args.access_key,
-                                                                           args.secret_key,
-                                                                           args.session_token,
-                                                                           credentials_path,
-                                                                           args.profile)
-
-    if args.access_key is None:
-        raise ValueError('No access key is available')
-
-    if args.secret_key is None:
-        raise ValueError('No secret key is available')
-
-    response = make_request(args.request,
-                            args.service,
-                            args.region,
-                            args.uri,
-                            headers,
-                            data,
-                            args.access_key,
-                            args.secret_key,
-                            args.session_token,
-                            args.data_binary,
-                            args.insecure)
-
-    if args.include or IS_VERBOSE:
-        print(response.headers, end='\n\n')
-    print(response.text.encode('utf-8'))
-
-    #response.raise_for_status()
-
-def myawscurl(args):
+def myawscurl(args, sts=None):
     """
     Awscurl CLI main entry point
     """
@@ -544,12 +392,7 @@ def myawscurl(args):
     # pylint: disable=deprecated-lambda
     headers = {k: v for (k, v) in map(lambda s: s.split(": "), args['header'])}
 
-    credentials_path = os.path.expanduser("~") + "/.aws/credentials"
-    args['access_key'], args['secret_key'], args['session_token'] = load_aws_config(args['access_key'],
-                                                                           args['secret_key'],
-                                                                           args['session_token'],
-                                                                           credentials_path,
-                                                                           args['profile'])
+    args['access_key'], args['secret_key'], args['session_token'] = get_credentials(sts)
 
     if args['access_key'] is None:
         raise ValueError('No access key is available')

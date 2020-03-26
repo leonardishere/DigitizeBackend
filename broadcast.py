@@ -1,4 +1,12 @@
-dynamodb_client = None
+import json
+import boto3
+import sys
+sys.path.append('dependencies') # local location of dependencies
+from myawscurl import myawscurl # awscurl modified
+
+dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
+sts = boto3.client('sts', region_name='us-west-2')
+
 headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
@@ -15,39 +23,37 @@ def get_connections():
     return connections
 
 def broadcast(message, connections):
+    bad_connections = []
     for connection in connections:
-        #gwmapi.post_to_connection(Data=message,ConnectionId=connection)
-        kwargs = {
-            'request': 'POST',
-            'service': 'execute-api',
-            'region': 'us-west-2',
-            'data': message,
-            'uri': 'https://soagcpz8cl.execute-api.us-west-2.amazonaws.com/Prod/%40connections/'+connection
-        }
-        myawscurl(kwargs)
+        try:
+            kwargs = {
+                'request': 'POST',
+                'service': 'execute-api',
+                'region': 'us-west-2',
+                'data': message,
+                'uri': 'https://soagcpz8cl.execute-api.us-west-2.amazonaws.com/Prod/%40connections/'+connection
+            }
+            myawscurl(kwargs, sts=sts)
+        except Exception as e:
+            bad_connections.append(connection)
+    return bad_connections
+
+def trim_bad_connections(connections):
+    for connection in connections:
+        dynamodb_client.delete_item(
+            TableName='DigitizeConnections',
+            Key={'connectionId':{'S':connection}}
+        )
 
 # Lambda handler
 def handler(event, context):
     try:
-
-        import json
-        import boto3
-        import sys
-        sys.path.append('dependencies') # local location of dependencies
-        #import awscurl # modified
-        from myawscurl import myawscurl
-
-        dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
-
         message = event['body']
-        print('message:', message)
         connections = get_connections()
-        broadcast(message, connections)
+        bad_connections = broadcast(message, connections)
+        trim_bad_connections(bad_connections)
         return {
             'statusCode': 200,
-            'body': json.dumps({
-                'message': 'sent message to ' + str(connections)
-            }),
             'headers': headers
         }
     except Exception as e:

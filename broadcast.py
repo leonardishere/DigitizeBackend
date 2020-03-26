@@ -1,5 +1,10 @@
 dynamodb_client = None
-headers = None
+headers = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+}
 
 def get_connections():
     connections = dynamodb_client.scan(
@@ -33,14 +38,6 @@ def handler(event, context):
         from myawscurl import myawscurl
 
         dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
-        #gwmapi = boto3.client('apigatewaymanagementapi', region_name='us-west-2')
-
-        headers = {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-        }
 
         message = event['body']
         print('message:', message)

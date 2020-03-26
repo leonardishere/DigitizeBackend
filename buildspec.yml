@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       python: 3.8
     commands:
-      - pip3 install --upgrade pip3    # upgrade pip
+      - pip3 install --upgrade pip    # upgrade pip
       - pip3 install --upgrade awscli # upgrade AWS CLI
       - pip3 install boto3            # install boto3
       - pip3 install aws-xray-sdk     # install x-ray
@@ -18,7 +18,7 @@ phases:
     commands:
 
       # Discover and run unit tests in the 'tests' directory. For more information, see <https://docs.python.org/3/library/unittest.html#test-discovery>
-      - python -m unittest discover tests
+      - python3 -m unittest discover tests
 
   build:
     commands:

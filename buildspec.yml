@@ -5,15 +5,15 @@ phases:
     runtime-versions:
       python: 3.8
     commands:
-      - pip install --upgrade pip    # upgrade pip
-      - pip install --upgrade awscli # upgrade AWS CLI
-      - pip install boto3            # install boto3
-      - pip install aws-xray-sdk     # install x-ray
-      #- pip install awscurl          # install awscurl
-      - pip install hashlib
-      - pip install hmac
-      - pip install pprint
-      - pip install requests
+      - pip3 install --upgrade pip3    # upgrade pip
+      - pip3 install --upgrade awscli # upgrade AWS CLI
+      - pip3 install boto3            # install boto3
+      - pip3 install aws-xray-sdk     # install x-ray
+      #- pip3 install awscurl          # install awscurl
+      - pip3 install hashlib
+      - pip3 install hmac
+      - pip3 install pprint
+      - pip3 install requests
   pre_build:
     commands:
 

@@ -54,7 +54,6 @@ def handler(event, context):
             'headers': headers
         }
     except Exception as e:
-        traceback.print_exc()
         return {
             'statusCode': 500,
             'body': json.dumps({'Error': str(e)}),

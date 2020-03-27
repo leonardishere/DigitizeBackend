@@ -350,6 +350,12 @@ Resources:
     Type: AWS::ApiGatewayV2::Api
     Properties:
       Name: SimpleChatWebSocket
+      Domain:
+        DomainName: digitize-api2.aleonard.dev
+        CertificateArn: arn:aws:acm:us-west-2:917159232232:certificate/ba2d0a69-0de2-44ff-b3bd-e3acef4c9122
+        Route53:
+          HostedZoneId: Z21QA4NBX4IRX8
+      StageName: Prod
       ProtocolType: WEBSOCKET
       RouteSelectionExpression: "$request.body.message"
   ConnectRoute:

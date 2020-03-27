@@ -50,7 +50,7 @@ def trim_bad_connections(connections):
 # Lambda handler
 def handler(event, context):
     try:
-        message = json.dumps(event)
+        message = json.dumps(event['body'] if 'body' in event else event)
         connections = get_connections()
         bad_connections, errors = broadcast(message, connections)
         #trim_bad_connections(bad_connections)
@@ -59,9 +59,7 @@ def handler(event, context):
             'body': json.dumps({
                 'connections': connections,
                 'bad_connections': bad_connections,
-                'errors': errors,
-                'event': event,
-                'dataType': str(type(event)),
+                'errors': errors
             }),
             'headers': headers
         }
@@ -69,8 +67,6 @@ def handler(event, context):
         return {
             'statusCode': 500,
             'body': json.dumps({
-                'event': event,
-                'dataType': str(type(event)),
                 'Error': str(e)
             }),
             'headers': headers

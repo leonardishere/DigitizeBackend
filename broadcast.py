@@ -24,6 +24,7 @@ def get_connections():
 
 def broadcast(message, connections):
     bad_connections = []
+    errors = []
     for connection in connections:
         try:
             kwargs = {
@@ -36,7 +37,8 @@ def broadcast(message, connections):
             myawscurl(kwargs, sts=sts)
         except Exception as e:
             bad_connections.append(connection)
-    return bad_connections
+            errors.append(str(e))
+    return bad_connections, errors
 
 def trim_bad_connections(connections):
     for connection in connections:
@@ -48,17 +50,28 @@ def trim_bad_connections(connections):
 # Lambda handler
 def handler(event, context):
     try:
-        message = event['body']
+        message = json.dumps(event)
         connections = get_connections()
-        bad_connections = broadcast(message, connections)
-        trim_bad_connections(bad_connections)
+        bad_connections, errors = broadcast(message, connections)
+        #trim_bad_connections(bad_connections)
         return {
             'statusCode': 200,
+            'body': json.dumps({
+                'connections': connections,
+                'bad_connections': bad_connections,
+                'errors': errors,
+                'event': event,
+                'dataType': str(type(event)),
+            }),
             'headers': headers
         }
     except Exception as e:
         return {
             'statusCode': 500,
-            'body': json.dumps({'Error': str(e)}),
+            'body': json.dumps({
+                'event': event,
+                'dataType': str(type(event)),
+                'Error': str(e)
+            }),
             'headers': headers
         }

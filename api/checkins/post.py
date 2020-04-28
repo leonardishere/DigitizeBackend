@@ -83,7 +83,7 @@ def checkin(cardreaderid, cardid):
             'msgType': 'info'
         })
     # 5: checkin CardID at CardReaderID
-    checkinTime = checkins2[0]['CheckinTime'] if len(checkins2) > 0 else int(time()*1000)
+    checkinTime = int(checkins2[0]['CheckinTime']['N']) if len(checkins2) > 0 else int(time()*1000)
     TransactItems.append({
         'Put':{
             'TableName':'DigitizeActiveCheckins',

@@ -356,7 +356,8 @@ Resources:
     Type: AWS::Route53::RecordSet # AWS::ApiGatewayV2::DomainName
     Properties:
       Name: 'digitize-api2.aleonard.dev'
-      AliasTarget: !Join ['', [!Ref 'SimpleChatWebSocket', '.execute-api.us-west-2.amazonaws.com.']]
+      AliasTarget:
+        DNSName: !Join ['', [!Ref 'SimpleChatWebSocket', '.execute-api.us-west-2.amazonaws.com.']]
       HostedZoneName: aleonard.dev.
       Type: A
   ConnectRoute:

@@ -32,7 +32,7 @@ def broadcast(message, connections):
                 'service': 'execute-api',
                 'region': 'us-west-2',
                 'data': message,
-                'uri': 'https://soagcpz8cl.execute-api.us-west-2.amazonaws.com/Prod/%40connections/'+connection
+                'uri': 'https://4n16v29io4.execute-api.us-west-2.amazonaws.com/Prod/%40connections/'+connection
             }
             myawscurl(kwargs, sts=sts)
         except Exception as e:

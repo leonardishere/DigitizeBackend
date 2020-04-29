@@ -436,22 +436,22 @@ Resources:
       Description: Prod Stage
       DeploymentId: !Ref Deployment
       ApiId: !Ref DigitizeWebSocketAPI
-  #DigitizeConnections:
-  #  Type: AWS::DynamoDB::Table
-  #  Properties:
-  #    AttributeDefinitions:
-  #    - AttributeName: "connectionId"
-  #      AttributeType: "S"
-  #    KeySchema:
-  #    - AttributeName: "connectionId"
-  #      KeyType: "HASH"
-  #    BillingMode: PAY_PER_REQUEST
-  #    Tags:
-  #      - Key: Project
-  #        Value: Digitize
-  #      - Key: Name
-  #        Value: DigitizeConnections
-  #    TableName: DigitizeConnections
+  DigitizeConnections:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: "connectionId"
+        AttributeType: "S"
+      KeySchema:
+      - AttributeName: "connectionId"
+        KeyType: "HASH"
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: Project
+          Value: Digitize
+        - Key: Name
+          Value: DigitizeConnections
+      TableName: DigitizeConnections
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -553,9 +553,9 @@ Resources:
             RestApiId: !Ref RestApi
 
 Outputs:
-  #ConnectionsTableArn:
-  #  Description: "Connections table ARN"
-  #  Value: !GetAtt DigitizeConnections.Arn
+  ConnectionsTableArn:
+    Description: "Connections table ARN"
+    Value: !GetAtt DigitizeConnections.Arn
 
   OnConnectFunctionArn:
     Description: "OnConnect function ARN"

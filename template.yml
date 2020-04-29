@@ -436,7 +436,7 @@ Resources:
       Description: Prod Stage
       DeploymentId: !Ref Deployment
       ApiId: !Ref DigitizeWebSocketAPI
-  ConnectionsTable:
+  DigitizeConnections:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
@@ -445,11 +445,12 @@ Resources:
       KeySchema:
       - AttributeName: "connectionId"
         KeyType: "HASH"
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-      SSESpecification:
-        SSEEnabled: True
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: Project
+          Value: Digitize
+        - Key: Name
+          Value: DigitizeInactiveCheckins
       TableName: DigitizeConnections
   OnConnectFunction:
     Type: AWS::Serverless::Function
@@ -554,7 +555,7 @@ Resources:
 Outputs:
   ConnectionsTableArn:
     Description: "Connections table ARN"
-    Value: !GetAtt ConnectionsTable.Arn
+    Value: !GetAtt DigitizeConnections.Arn
 
   OnConnectFunctionArn:
     Description: "OnConnect function ARN"

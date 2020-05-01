@@ -82,25 +82,25 @@ Resources:
             Path: /students/
             Method: get
             RestApiId: !Ref RestApi
-  StudentsPostFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: DigitizeStudentsPost
-      Handler: api/students/post.handler
-      Runtime: python3.7
-      MemorySize: 128
-      Tracing: Active
-      Role:
-        Fn::GetAtt:
-          - LambdaExecutionRole
-          - Arn
-      Events:
-        GetEvent:
-          Type: Api
-          Properties:
-            Path: /students/
-            Method: post
-            RestApiId: !Ref RestApi
+  #StudentsPostFunction:
+  #  Type: AWS::Serverless::Function
+  #  Properties:
+  #    FunctionName: DigitizeStudentsPost
+  #    Handler: api/students/post.handler
+  #    Runtime: python3.7
+  #    MemorySize: 128
+  #    Tracing: Active
+  #    Role:
+  #      Fn::GetAtt:
+  #        - LambdaExecutionRole
+  #        - Arn
+  #    Events:
+  #      GetEvent:
+  #        Type: Api
+  #        Properties:
+  #          Path: /students/
+  #          Method: post
+  #          RestApiId: !Ref RestApi
   StudentsGetCardIDFunction:
     Type: AWS::Serverless::Function
     Properties:

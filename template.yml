@@ -18,10 +18,6 @@ Parameters:
 Globals:
   Function:
     AutoPublishAlias: live
-    DeploymentPreference:
-      Enabled: true
-      Type: Canary10Percent5Minutes
-      Role: !Ref CodeDeployRole
   Api:
     # Allows an application running at https://digitize.aleonard.dev to call this API
     Cors:

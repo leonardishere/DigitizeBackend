@@ -548,6 +548,17 @@ Resources:
             Method: post
             RestApiId: !Ref RestApi
 
+  BroadcastTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: Digitize
+      Tags:
+        - Key: Project
+          Value: Digitize
+        - Key: Name
+          Value: DigitizeBroadcasts
+      TopicName: DigitizeBroadcasts
+
 Outputs:
   ConnectionsTableArn:
     Description: "Connections table ARN"

@@ -2,7 +2,6 @@ import json
 import boto3
 import os
 import sys
-import traceback
 sys.path.append('dependencies') # local location of dependencies
 from myawscurl import myawscurl # awscurl modified
 
@@ -22,7 +21,6 @@ def get_connections():
         TableName=CONNECTIONS_TABLE
     )['Items']
     connections = list(map(lambda conn: conn['connectionId']['S'], connections))
-    print('connections:', connections)
     return connections
 
 def broadcast(message, connections):
@@ -41,8 +39,6 @@ def broadcast(message, connections):
             }
             myawscurl(kwargs)
         except Exception as e:
-            print('error stack:')
-            print(traceback.print_exc())
             bad_connections.append(connection)
             errors.append(str(e))
     return bad_connections, errors
@@ -57,7 +53,7 @@ def trim_bad_connections(connections):
 # Lambda handler
 def handler(event, context):
     try:
-        message = event['body'] if 'body' in event else event
+        message = event['Records'][0]['Sns']['Message']
         connections = get_connections()
         bad_connections, errors = broadcast(message, connections)
         trim_bad_connections(bad_connections)

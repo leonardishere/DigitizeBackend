@@ -27,39 +27,46 @@ def post_student(student):
         print('here 1')
         student = student.to_dict()
         print('here 2')
-        response = table.put_item(Item=student)
+        ddb_response = table.put_item(Item=student)
         print('here 3')
-        msg = {
+        http_response = {
             'statusCode': 200,
-            'body': {
+            'body': json.dumps({
                 'msgType': 'info',
                 'msg': 'New Student Added',
                 'data': {
                     'students_added': [student]
                 }
-            },
+            }),
             'headers': headers
         }
+        broadcast_msg = json.dumps({
+            'msgType': 'info',
+            'msg': 'New Student Added',
+            'data': {
+                'students_added': [student]
+            }
+        })
         print('here 4')
         #broad_res = broadcast(msg, BROADCAST_TOPIC)
         print('broadcasting to ', BROADCAST_TOPIC)
         broad_res = sns_client.publish(
             TopicArn=BROADCAST_TOPIC,
             #TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
-            Message=json.dumps(msg)
+            Message=broadcast_msg
         )
         print('here 5')
         print(broad_res)
         print('here 6')
-        return msg
+        return http_response
     except Exception as e:
         return {
             'statusCode': 500,
-            'body': {
+            'body': json.dumps({
                 'msgType': 'ignore',
                 'msg': '',
                 'error': str(e)
-            },
+            }),
             'headers': headers
         }
 
@@ -73,11 +80,11 @@ def handler(event, context):
     except Exception as e:
         return {
             'statusCode': 400,
-            'body': {
+            'body': json.dumps({
                 'msgType': 'ignore',
                 'msg': '',
                 'error': str(e)
-            },
+            }),
             'headers': headers
         }
     return post_student(student)

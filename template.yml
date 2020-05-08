@@ -21,6 +21,7 @@ Globals:
     Environment:
       Variables:
         CONNECTIONS_TABLE: !Ref DigitizeConnections
+        BROADCAST_TOPIC: !GetAtt BroadcastTopic.Arn
   Api:
     # Allows an application running at https://digitize.aleonard.dev to call this API
     Cors:
@@ -560,7 +561,7 @@ Resources:
     Properties:
       Protocol: lambda
       Endpoint: !GetAtt BroadcastFunction.Arn
-      TopicArn: !Ref BroadcastTopic
+      TopicArn: !GetAtt BroadcastTopic.Arn
 
 Outputs:
   ConnectionsTableArn:

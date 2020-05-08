@@ -558,6 +558,12 @@ Resources:
         - Key: Name
           Value: DigitizeBroadcasts
       TopicName: DigitizeBroadcasts
+  BroadcastSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      Endpoint: !Ref BroadcastFunction
+      TopicArn: !Ref BroadcastTopic
 
 Outputs:
   ConnectionsTableArn:

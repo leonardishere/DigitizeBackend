@@ -4,7 +4,6 @@ import os
 import sys
 sys.path.append('dependencies') # local location of dependencies
 from student import Student
-#from broadcast import broadcast
 
 BROADCAST_TOPIC = os.environ['BROADCAST_TOPIC']
 
@@ -24,12 +23,8 @@ headers = {
 
 def post_student(student):
     try:
-        print('here 1')
         student = student.to_dict()
-        print('here 2')
         ddb_response = table.put_item(Item=student)
-        print('here 3')
-
         broadcast_msg = json.dumps({
             'msgType': 'info',
             'msg': 'New Student Added',
@@ -37,12 +32,9 @@ def post_student(student):
                 'students_added': [student]
             }
         })
-        print('here 4')
-        #broad_res = broadcast(msg, BROADCAST_TOPIC)
-        print('broadcasting to ', BROADCAST_TOPIC)
-        broad_res = sns_client.publish(
-            #TopicArn=BROADCAST_TOPIC,
-            TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
+        sns_response = sns_client.publish(
+            TopicArn=BROADCAST_TOPIC,
+            #TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
             Message=broadcast_msg
         )
         http_response = {
@@ -52,14 +44,10 @@ def post_student(student):
                 'msg': 'New Student Added',
                 'data': {
                     'students_added': [student]
-                },
-                'broad_res': broad_res
+                }
             }),
             'headers': headers
         }
-        print('here 5')
-        print(broad_res)
-        print('here 6')
         return http_response
     except Exception as e:
         return {
@@ -75,10 +63,7 @@ def post_student(student):
 # Lambda handler
 def handler(event, context):
     try:
-        #eventbody = json.loads(event['body'])
-        #print('event body:', json.dumps(eventbody, indent=2))
         student = Student(json.loads(event['body']))
-        print('student:', student)
     except Exception as e:
         return {
             'statusCode': 400,

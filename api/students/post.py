@@ -29,17 +29,7 @@ def post_student(student):
         print('here 2')
         ddb_response = table.put_item(Item=student)
         print('here 3')
-        http_response = {
-            'statusCode': 200,
-            'body': json.dumps({
-                'msgType': 'info',
-                'msg': 'New Student Added',
-                'data': {
-                    'students_added': [student]
-                }
-            }),
-            'headers': headers
-        }
+
         broadcast_msg = json.dumps({
             'msgType': 'info',
             'msg': 'New Student Added',
@@ -51,10 +41,22 @@ def post_student(student):
         #broad_res = broadcast(msg, BROADCAST_TOPIC)
         print('broadcasting to ', BROADCAST_TOPIC)
         broad_res = sns_client.publish(
-            TopicArn=BROADCAST_TOPIC,
-            #TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
+            #TopicArn=BROADCAST_TOPIC,
+            TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
             Message=broadcast_msg
         )
+        http_response = {
+            'statusCode': 200,
+            'body': json.dumps({
+                'msgType': 'info',
+                'msg': 'New Student Added',
+                'data': {
+                    'students_added': [student]
+                },
+                'broad_res': broad_res
+            }),
+            'headers': headers
+        }
         print('here 5')
         print(broad_res)
         print('here 6')

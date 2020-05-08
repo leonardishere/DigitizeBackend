@@ -18,6 +18,9 @@ Parameters:
 Globals:
   Function:
     AutoPublishAlias: live
+    Environment:
+      Variables:
+        CONNECTIONS_TABLE: !Ref DigitizeConnections
   Api:
     # Allows an application running at https://digitize.aleonard.dev to call this API
     Cors:
@@ -455,9 +458,6 @@ Resources:
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs12.x
-      Environment:
-        Variables:
-          TABLE_NAME: DigitizeConnections
       Policies:
       - DynamoDBCrudPolicy:
           TableName: DigitizeConnections
@@ -477,9 +477,6 @@ Resources:
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs12.x
-      Environment:
-        Variables:
-          TABLE_NAME: DigitizeConnections
       Policies:
       - DynamoDBCrudPolicy:
           TableName: DigitizeConnections

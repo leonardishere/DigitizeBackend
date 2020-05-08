@@ -1,8 +1,11 @@
 import json
 import boto3
+import os
 import sys
 sys.path.append('dependencies') # local location of dependencies
 from myawscurl import myawscurl # awscurl modified
+
+CONNECTIONS_TABLE = os.environ['CONNECTIONS_TABLE']
 
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
 sts = boto3.client('sts', region_name='us-west-2')
@@ -16,7 +19,7 @@ headers = {
 
 def get_connections():
     connections = dynamodb_client.scan(
-        TableName='DigitizeConnections'
+        TableName=CONNECTIONS_TABLE
     )['Items']
     connections = list(map(lambda conn: conn['connectionId']['S'], connections))
     print('connections:', connections)
@@ -53,7 +56,7 @@ def handler(event, context):
         message = event['body'] if 'body' in event else event
         connections = get_connections()
         bad_connections, errors = broadcast(message, connections)
-        #trim_bad_connections(bad_connections)
+        trim_bad_connections(bad_connections)
         return {
             'statusCode': 200,
             'body': json.dumps({

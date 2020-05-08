@@ -562,7 +562,7 @@ Resources:
     Type: AWS::SNS::Subscription
     Properties:
       Protocol: lambda
-      Endpoint: !Ref BroadcastFunction
+      Endpoint: !GetAtt BroadcastFunction.Arn
       TopicArn: !Ref BroadcastTopic
 
 Outputs:

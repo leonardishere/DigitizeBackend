@@ -44,8 +44,8 @@ def post_student(student):
         #broad_res = broadcast(msg, BROADCAST_TOPIC)
         print('broadcasting to ', BROADCAST_TOPIC)
         broad_res = sns_client.publish(
-            #TopicArn=BROADCAST_TOPIC,
-            TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
+            TopicArn=BROADCAST_TOPIC,
+            #TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
             Message=json.dumps(msg)
         )
         print('here 5')

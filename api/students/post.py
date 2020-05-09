@@ -21,8 +21,29 @@ headers = {
     "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
 }
 
+def get_student(cardid):
+    try:
+        response = dynamodb_client.query(
+            TableName='DigitizeStudents',
+            KeyConditionExpression="CardID=:cardid",
+            ExpressionAttributeValues={
+                ":cardid": { "S": cardid }
+            },
+            ScanIndexForward=True
+        )
+        return [Student(item) for item in response['Items']]
+    except Exception as e:
+        return []
+
 def post_student(student):
     try:
+        existing_students = get_student(student.CardID)
+        if len(existing_students) > 0:
+            return {
+                'statusCode': 500,
+                'body': 'Error: Student already exists',
+                'headers': headers
+            }
         student = student.to_dict()
         ddb_response = table.put_item(Item=student)
         broadcast_msg = json.dumps({

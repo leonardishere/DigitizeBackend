@@ -48,18 +48,18 @@ def post_student(student):
             'msgType': 'info',
             'msg': 'New Student Added',
             'data': {
-                'students_added': [student]
+                'students_added': [student.to_dict()]
             }
         })
         sns_response = sns_client.publish(
-            TopicArn=BROADCAST_TOPIC,
-            #TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
+            #TopicArn=BROADCAST_TOPIC,
+            TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
             Message=broadcast_msg
         )
     except Exception as e:
         return {
             'statusCode': 500,
-            'body': "Error: Could not broadcast.",
+            'body': "Error: Could not broadcast. " + str(e),
             'headers': headers
         }
 
@@ -70,7 +70,7 @@ def post_student(student):
             'msgType': 'info',
             'msg': 'New Student Added',
             'data': {
-                'students_added': [student]
+                'students_added': [student.to_dict()]
             }
         }),
         'headers': headers

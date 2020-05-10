@@ -46,3 +46,10 @@ class Student:
 
     def short_rep(self):
         return self.Name
+
+    def to_dynamo_item(self):
+        return {
+            'Name': {'S': self.Name},
+            'StudentID': {'S': self.StudentID},
+            'CardID': {'S': self.CardID}
+        }

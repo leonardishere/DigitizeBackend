@@ -6,12 +6,7 @@ sys.path.append('dependencies') # local location of dependencies
 from student import Student
 
 BROADCAST_TOPIC = os.environ['BROADCAST_TOPIC']
-
-table = (boto3
-            .resource('dynamodb', region_name='us-west-2')
-            .Table('DigitizeStudents')
-        )
-
+dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
 sns_client = boto3.client('sns', region_name='us-west-2')
 
 headers = {
@@ -21,31 +16,34 @@ headers = {
     "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
 }
 
-def get_student(cardid):
-    try:
-        response = dynamodb_client.query(
-            TableName='DigitizeStudents',
-            KeyConditionExpression="CardID=:cardid",
-            ExpressionAttributeValues={
-                ":cardid": { "S": cardid }
-            },
-            ScanIndexForward=True
-        )
-        return [Student(item) for item in response['Items']]
-    except Exception as e:
-        return []
-
 def post_student(student):
+    # parse student
     try:
-        existing_students = get_student(student.CardID)
-        if len(existing_students) > 0:
-            return {
-                'statusCode': 500,
-                'body': 'Error: Student already exists',
-                'headers': headers
-            }
-        student = student.to_dict()
-        ddb_response = table.put_item(Item=student)
+        student = Student(json.loads(student))
+        student_item = student.to_dynamo_item()
+    except Exception as e:
+        return {
+            'statusCode': 400,
+            'body': "Error: Could not parse request.",
+            'headers': headers
+        }
+
+    # update dynamodb
+    try:
+        dynamo_response = dynamodb_client.put_item(
+            TableName='DigitizeStudents',
+            Item=student_item,
+            ConditionExpression='attribute_not_exists(CardID) AND attribute_not_exists(StudentID)'
+        )
+    except Exception as e:
+        return {
+            'statusCode': 400,
+            'body': "Error: Student already exists.",
+            'headers': headers
+        }
+
+    # broadcast
+    try:
         broadcast_msg = json.dumps({
             'msgType': 'info',
             'msg': 'New Student Added',
@@ -58,41 +56,27 @@ def post_student(student):
             #TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
             Message=broadcast_msg
         )
-        http_response = {
-            'statusCode': 200,
-            'body': json.dumps({
-                'msgType': 'info',
-                'msg': 'New Student Added',
-                'data': {
-                    'students_added': [student]
-                }
-            }),
-            'headers': headers
-        }
-        return http_response
     except Exception as e:
         return {
             'statusCode': 500,
-            'body': json.dumps({
-                'msgType': 'ignore',
-                'msg': '',
-                'error': str(e)
-            }),
+            'body': "Error: Could not broadcast.",
             'headers': headers
         }
 
+    # success
+    http_response = {
+        'statusCode': 200,
+        'body': json.dumps({
+            'msgType': 'info',
+            'msg': 'New Student Added',
+            'data': {
+                'students_added': [student]
+            }
+        }),
+        'headers': headers
+    }
+    return http_response
+
 # Lambda handler
 def handler(event, context):
-    try:
-        student = Student(json.loads(event['body']))
-    except Exception as e:
-        return {
-            'statusCode': 400,
-            'body': json.dumps({
-                'msgType': 'ignore',
-                'msg': '',
-                'error': str(e)
-            }),
-            'headers': headers
-        }
-    return post_student(student)
+    return post_student(event['body'])

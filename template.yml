@@ -524,7 +524,6 @@ Resources:
       FunctionName: !Ref SendMessageFunction
       Principal: apigateway.amazonaws.com
 
-  # TODO: delete this
   BroadcastFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -538,14 +537,6 @@ Resources:
         Fn::GetAtt:
           - LambdaExecutionRole
           - Arn
-      Events:
-        GetEvent:
-          Type: Api
-          Properties:
-            Path: /broadcast/
-            Method: post
-            RestApiId: !Ref RestApi
-
   BroadcastTopic:
     Type: AWS::SNS::Topic
     Properties:

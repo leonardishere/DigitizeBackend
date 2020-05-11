@@ -1,5 +1,6 @@
 import json
 import boto3
+import os
 import sys
 from time import time
 sys.path.append('dependencies') # local location of dependencies
@@ -18,18 +19,18 @@ headers = {
     "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE"
 }
 
-logic_flow = """
-HTTP request contains CardReaderID, CardID
-0: get active checkin by CardReaderID
-1: get active checkin by CardID
-2: if CardID is already checked in to CardReaderID (ref 0,1), exit
-- only one is required to make this assertion, not both
-3: get student by CardID
-4: checkout 1 and 2 if they exist
-- delete active checkin, create inactivecheckin for both
-5: checkin CardID at CardReaderID
-- 4 and 5 need to happen anotomically (total of 1, 3, or 5 writes)
-"""
+# logic flow:
+# HTTP request contains CardReaderID, CardID
+# 0: get active checkin by CardReaderID
+# 1: get active checkin by CardID
+# 2: if CardID is already checked in to CardReaderID (ref 0,1), exit
+# - only one is required to make this assertion, not both
+# 3: get student by CardID
+# 4: checkout 1 and 2 if they exist
+# - delete active checkin, create inactivecheckin for both
+# 5: checkin CardID at CardReaderID
+# - 4 and 5 need to happen anotomically (total of 1, 3, or 5 writes)
+
 
 def checkin(cardreaderid, cardid):
     # 0: get active checkin by CardReaderID

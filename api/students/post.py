@@ -5,8 +5,9 @@ import sys
 sys.path.append('dependencies') # local location of dependencies
 from student import Student
 
-BROADCAST_TOPIC = os.environ['BROADCAST_TOPIC']
+STUDENTS_TABLE = os.environ['STUDENTS_TABLE']
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
+BROADCAST_TOPIC = os.environ['BROADCAST_TOPIC']
 sns_client = boto3.client('sns', region_name='us-west-2')
 
 headers = {
@@ -31,7 +32,7 @@ def post_student(student):
     # update dynamodb
     try:
         dynamo_response = dynamodb_client.put_item(
-            TableName='DigitizeStudents',
+            TableName=STUDENTS_TABLE,
             Item=student_item,
             ConditionExpression='attribute_not_exists(CardID) AND attribute_not_exists(StudentID)'
         )
@@ -52,8 +53,7 @@ def post_student(student):
             }
         })
         sns_response = sns_client.publish(
-            #TopicArn=BROADCAST_TOPIC,
-            TopicArn='arn:aws:sns:us-west-2:917159232232:DigitizeBroadcasts',
+            TopicArn=BROADCAST_TOPIC,
             Message=broadcast_msg
         )
     except Exception as e:

@@ -20,14 +20,14 @@ Globals:
     AutoPublishAlias: live
     Environment:
       Variables:
+        STUDENTS_TABLE : !Ref DigitizeStudents
         CONNECTIONS_TABLE: !Ref DigitizeConnections
         BROADCAST_TOPIC: !Ref BroadcastTopic
   Api:
-    # Allows an application running at https://digitize.aleonard.dev to call this API
     Cors:
-      AllowMethods: "'OPTIONS,POST,GET'"
+      AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
       AllowHeaders: "'Content-Type'"
-      AllowOrigin: "'*'" #"'https://digitize.aleonard.dev','localhost'"
+      AllowOrigin: "'*'"
 
 Resources:
   # API

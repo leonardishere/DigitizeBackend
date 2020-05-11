@@ -11,9 +11,9 @@ sns_client = boto3.client('sns', region_name='us-west-2')
 
 headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+    "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE"
 }
 
 def post_student(student):

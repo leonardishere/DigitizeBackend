@@ -2,6 +2,7 @@ import json
 import boto3
 import os
 import sys
+import traceback
 from time import time
 sys.path.append('dependencies') # local location of dependencies
 from student import Student
@@ -11,6 +12,8 @@ STUDENTS_TABLE = os.environ['STUDENTS_TABLE']
 ACTIVE_CHECKINS_TABLE = os.environ['ACTIVE_CHECKINS_TABLE']
 INACTIVE_CHECKINS_TABLE = os.environ['INACTIVE_CHECKINS_TABLE']
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
+BROADCAST_TOPIC = os.environ['BROADCAST_TOPIC']
+sns_client = boto3.client('sns', region_name='us-west-2')
 
 headers = {
     "Content-Type": "application/json",
@@ -65,16 +68,28 @@ def checkin(cardreaderid, cardid):
     if len(checkins1) > 0:
         successBody.append({
             'msg': '{} checked out'.format(checkins1[0]['Student']['M']['Name']['S']),
-            'msgType': 'info'
+            'msgType': 'info',
+            'data': {
+                'checkout': {
+                    'CardReaderID': checkins1[0]['CardReaderID']['N'],
+                    'CheckoutTime': int(time()*1000)
+                }
+            }
         })
     if len(checkins2) > 0:
         successBody.append({
             'msg': "{} moved to cardreader {}".format(student['Name']['S'],cardreaderid),
-            'msgType': 'info'
+            'msgType': 'info',
+            'data': {
+                'move': {
+                    'OldCardReaderID': checkins2[0]['CardReaderID']['N'],
+                    'NewCardReaderID': cardreaderid
+                }
+            }
         })
         TransactItems.append({
             'Delete':{
-                'TableName':'DigitizeActiveCheckins',
+                'TableName':ACTIVE_CHECKINS_TABLE,
                 'Key':{
                     'CardReaderID':{'N':str(checkins2[0]['CardReaderID']['N'])}
                 }
@@ -83,7 +98,19 @@ def checkin(cardreaderid, cardid):
     else:
         successBody.append({
             'msg':"{} checked in at cardreader {}".format(student['Name']['S'],cardreaderid),
-            'msgType': 'info'
+            'msgType': 'info',
+            'data': {
+                'checkin': {
+                    'CardReaderID': cardreaderid,
+                    'CardID'      : cardid,
+                    'CheckinTime' : int(time()*1000),
+                    'Student'     : {
+                        'Name'      : student['Name']['S'],
+                        'StudentID' : student['StudentID']['S'],
+                        'CardID'    : student['CardID']['S']
+                    }
+                }
+            }
         })
     # 5: checkin CardID at CardReaderID
     checkinTime = int(checkins2[0]['CheckinTime']['N']) if len(checkins2) > 0 else int(time()*1000)
@@ -92,7 +119,7 @@ def checkin(cardreaderid, cardid):
             'TableName':ACTIVE_CHECKINS_TABLE,
             'Item':{
                 'CardReaderID': {'N': str(cardreaderid)},
-                'CardID'   : {'S': student['CardID']['S']},
+                'CardID'      : {'S': student['CardID']['S']},
                 'CheckinTime' : {'N': str(checkinTime)},
                 'Student'     : {'M': student}
             }
@@ -103,9 +130,14 @@ def checkin(cardreaderid, cardid):
     res = dynamodb_client.transact_write_items(TransactItems=TransactItems)
     if len(checkins1) > 0:
         res2 = write_inactive_checkin(checkins1[0])
+    successBody = json.dumps(successBody)
+    sns_response = sns_client.publish(
+        TopicArn=BROADCAST_TOPIC,
+        Message=successBody
+    )
     return {
         'statusCode': 200,
-        'body': json.dumps(successBody),
+        'body': successBody,
         'headers': headers
     }
 
@@ -177,6 +209,7 @@ def handler(event, context):
         cardid = req['CardID']
         return checkin(cardreaderid, cardid)
     except Exception as e:
+        traceback.print_exc()
         return {
             'statusCode': 500,
             'body': json.dumps({'Error': str(e)}),

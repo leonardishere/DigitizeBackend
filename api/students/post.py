@@ -45,13 +45,13 @@ def post_student(student):
 
     # broadcast
     try:
-        broadcast_msg = json.dumps({
+        broadcast_msg = json.dumps([{
             'msgType': 'info',
             'msg': 'New Student Added',
             'data': {
                 'students_added': [student.to_dict()]
             }
-        })
+        }])
         sns_response = sns_client.publish(
             TopicArn=BROADCAST_TOPIC,
             Message=broadcast_msg

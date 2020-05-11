@@ -2,18 +2,20 @@ import json
 import boto3
 import sys
 from time import time
-
 sys.path.append('dependencies') # local location of dependencies
 from student import Student
 from activecheckin import ActiveCheckin
 
+STUDENTS_TABLE = os.environ['STUDENTS_TABLE']
+ACTIVE_CHECKINS_TABLE = os.environ['ACTIVE_CHECKINS_TABLE']
+INACTIVE_CHECKINS_TABLE = os.environ['INACTIVE_CHECKINS_TABLE']
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
 
 headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+    "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE"
 }
 
 logic_flow = """
@@ -86,7 +88,7 @@ def checkin(cardreaderid, cardid):
     checkinTime = int(checkins2[0]['CheckinTime']['N']) if len(checkins2) > 0 else int(time()*1000)
     TransactItems.append({
         'Put':{
-            'TableName':'DigitizeActiveCheckins',
+            'TableName':ACTIVE_CHECKINS_TABLE,
             'Item':{
                 'CardReaderID': {'N': str(cardreaderid)},
                 'CardID'   : {'S': student['CardID']['S']},
@@ -98,23 +100,6 @@ def checkin(cardreaderid, cardid):
     # 4 and 5 atomically
     # well I guess you can't atomically write across multiple tables
     res = dynamodb_client.transact_write_items(TransactItems=TransactItems)
-    """
-    if res['ResponseMetadata']['HTTPStatusCode'] == 200:
-        return {
-            'statusCode': 200,
-            'body': json.dumps(successBody),
-            'headers': headers
-        }
-    else:
-        return {
-            'statusCode': res['ResponseMetadata']['HTTPStatusCode'],
-            'body': json.dumps([{
-                'msg': res,
-                'msgType': 'error'
-            }]),
-            'headers': headers
-        }
-    """
     if len(checkins1) > 0:
         res2 = write_inactive_checkin(checkins1[0])
     return {
@@ -125,7 +110,7 @@ def checkin(cardreaderid, cardid):
 
 def get_active_checkins_by_cardreaderid(cardreaderid):
     response = dynamodb_client.query(
-        TableName='DigitizeActiveCheckins',
+        TableName=ACTIVE_CHECKINS_TABLE,
         KeyConditionExpression="CardReaderID=:cardreaderid",
         ExpressionAttributeValues={
             ":cardreaderid": { "N": cardreaderid }
@@ -136,7 +121,7 @@ def get_active_checkins_by_cardreaderid(cardreaderid):
 
 def get_active_checkins_by_cardid(cardid):
     response = dynamodb_client.query(
-        TableName='DigitizeActiveCheckins',
+        TableName=ACTIVE_CHECKINS_TABLE,
         IndexName='CardID',
         KeyConditionExpression="CardID=:cardid",
         ExpressionAttributeValues={
@@ -148,7 +133,7 @@ def get_active_checkins_by_cardid(cardid):
 
 def get_student_by_cardid(cardid):
     response = dynamodb_client.query(
-        TableName='DigitizeStudents',
+        TableName=STUDENTS_TABLE,
         KeyConditionExpression="CardID=:cardid",
         ExpressionAttributeValues={
             ":cardid": { "S": cardid }
@@ -167,7 +152,7 @@ def write_inactive_checkin(active_checkin):
         'CheckoutTime': {'N': curtime}
     }
     response = dynamodb_client.put_item(
-        TableName='DigitizeInactiveCheckins',
+        TableName=INACTIVE_CHECKINS_TABLE,
         Item=inactive_checkin
     )
 

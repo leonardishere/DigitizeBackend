@@ -1,31 +1,30 @@
 import json
 import boto3
 import sys
-
 sys.path.append('dependencies') # local location of dependencies
 from student import Student
 from activecheckin import ActiveCheckin
 
-# initiating the dynamodb client takes >200 ms. moving out here to init once and persist
+ACTIVE_CHECKINS_TABLE = os.environ['ACTIVE_CHECKINS_TABLE']
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
 
 headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+    "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE"
 }
 
 def get_active_checkins():
-    arr = dynamodb_client.scan(
-        TableName='DigitizeActiveCheckins'
-    )['Items']
+    arr = dynamodb_client.scan(TableName=ACTIVE_CHECKINS_TABLE)['Items']
     arr = [ActiveCheckin(checkin) for checkin in arr]
     arr.sort(key=lambda checkin: checkin.CardReaderID)
     data = [checkin.to_dict() for checkin in arr]
-    return {'statusCode': 200,
-            'body': json.dumps(data),
-            'headers': headers}
+    return {
+        'statusCode': 200,
+        'body': json.dumps(data),
+        'headers': headers
+    }
 
 # Lambda handler
 def handler(event, context):

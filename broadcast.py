@@ -9,13 +9,6 @@ CONNECTIONS_TABLE = os.environ['CONNECTIONS_TABLE']
 
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
 
-headers = {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-}
-
 def get_connections():
     connections = dynamodb_client.scan(
         TableName=CONNECTIONS_TABLE
@@ -52,25 +45,7 @@ def trim_bad_connections(connections):
 
 # Lambda handler
 def handler(event, context):
-    try:
-        message = event['Records'][0]['Sns']['Message']
-        connections = get_connections()
-        bad_connections, errors = broadcast(message, connections)
-        trim_bad_connections(bad_connections)
-        return {
-            'statusCode': 200,
-            'body': json.dumps({
-                'connections': connections,
-                'bad_connections': bad_connections,
-                'errors': errors
-            }),
-            'headers': headers
-        }
-    except Exception as e:
-        return {
-            'statusCode': 500,
-            'body': json.dumps({
-                'Error': str(e)
-            }),
-            'headers': headers
-        }
+    message = event['Records'][0]['Sns']['Message']
+    connections = get_connections()
+    bad_connections, errors = broadcast(message, connections)
+    trim_bad_connections(bad_connections)

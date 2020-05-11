@@ -1,5 +1,6 @@
 import json
 import boto3
+import os
 import sys
 sys.path.append('dependencies')
 from student import Student

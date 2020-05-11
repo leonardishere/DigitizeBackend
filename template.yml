@@ -21,6 +21,8 @@ Globals:
     Environment:
       Variables:
         STUDENTS_TABLE : !Ref DigitizeStudents
+        ACTIVE_CHECKINS_TABLE: !Ref DigitizeActiveCheckins
+        INACTIVE_CHECKINS_TABLE: !Ref DigitizeInactiveCheckins
         CONNECTIONS_TABLE: !Ref DigitizeConnections
         BROADCAST_TOPIC: !Ref BroadcastTopic
   Api:

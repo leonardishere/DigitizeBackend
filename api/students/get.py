@@ -1,5 +1,6 @@
 import json
 import boto3
+import os
 import sys
 sys.path.append('dependencies') # local location of dependencies
 from student import Student

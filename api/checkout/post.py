@@ -34,7 +34,12 @@ def checkout():
     write_inactive_checkins(checkins)
     msg = json.dumps([{
         'msg': 'Class dismissed',
-        'msgType': 'info'
+        'msgType': 'info',
+        'data': {
+            'checkout_all': {
+                'CheckoutTime': int(time()*1000)
+            }
+        }
     }])
     sns_response = sns_client.publish(
         TopicArn=BROADCAST_TOPIC,

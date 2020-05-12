@@ -1,7 +1,8 @@
 import json
 import boto3
-from time import time
+import os
 import sys
+from time import time
 sys.path.append('dependencies') # local location of dependencies
 from student import Student
 from activecheckin import ActiveCheckin

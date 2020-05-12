@@ -71,7 +71,7 @@ def checkin(cardreaderid, cardid):
             'msgType': 'info',
             'data': {
                 'checkout': {
-                    'CardReaderID': checkins1[0]['CardReaderID']['N'],
+                    'CardReaderID': int(checkins1[0]['CardReaderID']['N']),
                     'CheckoutTime': int(time()*1000)
                 }
             }
@@ -82,8 +82,8 @@ def checkin(cardreaderid, cardid):
             'msgType': 'info',
             'data': {
                 'move': {
-                    'OldCardReaderID': checkins2[0]['CardReaderID']['N'],
-                    'NewCardReaderID': cardreaderid
+                    'OldCardReaderID': int(checkins2[0]['CardReaderID']['N']),
+                    'NewCardReaderID': int(cardreaderid)
                 }
             }
         })
@@ -101,7 +101,7 @@ def checkin(cardreaderid, cardid):
             'msgType': 'info',
             'data': {
                 'checkin': {
-                    'CardReaderID': cardreaderid,
+                    'CardReaderID': int(cardreaderid),
                     'CardID'      : cardid,
                     'CheckinTime' : int(time()*1000),
                     'Student'     : {

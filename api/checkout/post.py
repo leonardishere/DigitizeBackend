@@ -1,19 +1,23 @@
 import json
 import boto3
-import sys
 from time import time
-
+import sys
 sys.path.append('dependencies') # local location of dependencies
 from student import Student
 from activecheckin import ActiveCheckin
 
+STUDENTS_TABLE = os.environ['STUDENTS_TABLE']
+ACTIVE_CHECKINS_TABLE = os.environ['ACTIVE_CHECKINS_TABLE']
+INACTIVE_CHECKINS_TABLE = os.environ['INACTIVE_CHECKINS_TABLE']
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
+BROADCAST_TOPIC = os.environ['BROADCAST_TOPIC']
+sns_client = boto3.client('sns', region_name='us-west-2')
 
 headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*", #"https://digitize.aleonard.dev",
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+    "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE"
 }
 
 logic_flow = """
@@ -27,24 +31,27 @@ def checkout():
     for checkin in checkins:
         delete_active_checkin(checkin['CardReaderID']['N'])
     write_inactive_checkins(checkins)
+    msg = json.dumps([{
+        'msg': 'Class dismissed',
+        'msgType': 'info'
+    }])
+    sns_response = sns_client.publish(
+        TopicArn=BROADCAST_TOPIC,
+        Message=msg
+    )
     return {
         'statusCode': 200,
-        'body': json.dumps([{
-            'msg': '{} students checked out successfully'.format(len(checkins)),
-            'msgType': 'info'
-        }]),
+        'body': msg,
         'headers': headers
     }
 
 def get_active_checkins():
-    checkins = dynamodb_client.scan(
-        TableName='DigitizeActiveCheckins'
-    )['Items']
+    checkins = dynamodb_client.scan(TableName=ACTIVE_CHECKINS_TABLE)['Items']
     return checkins
 
 def delete_active_checkin(cardreaderid):
     response = dynamodb_client.delete_item(
-        TableName='DigitizeActiveCheckins',
+        TableName=ACTIVE_CHECKINS_TABLE,
         Key={'CardReaderID':{'N':str(cardreaderid)}}
     )
 
@@ -64,10 +71,7 @@ def write_inactive_checkins(active_checkins):
         }
     }, active_checkins))
     response = dynamodb_client.batch_write_item(
-        RequestItems={
-            'DigitizeInactiveCheckins': items
-        }
-    )
+        RequestItems={INACTIVE_CHECKINS_TABLE: items})
 
 # Lambda handler
 def handler(event, context):

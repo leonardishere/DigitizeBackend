@@ -6,13 +6,10 @@ sys.path.append('dependencies') # local location of dependencies
 from myawscurl import myawscurl # awscurl modified
 
 CONNECTIONS_TABLE = os.environ['CONNECTIONS_TABLE']
-
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
 
 def get_connections():
-    connections = dynamodb_client.scan(
-        TableName=CONNECTIONS_TABLE
-    )['Items']
+    connections = dynamodb_client.scan(TableName=CONNECTIONS_TABLE)['Items']
     connections = list(map(lambda conn: conn['connectionId']['S'], connections))
     return connections
 

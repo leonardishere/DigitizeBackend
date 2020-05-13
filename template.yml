@@ -363,6 +363,26 @@ Resources:
   #      HostedZoneId: Z2OJLYMUO9EFXC
   #    HostedZoneName: aleonard.dev.
   #    Type: A
+  DefaultRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref DigitizeWebSocketAPI
+      RouteKey: $default
+      AuthorizationType: NONE
+      OperationName: Default
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref DefaultInteg
+  DefaultInteg:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref DigitizeWebSocketAPI
+      Description: Default Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DefaultFunction.Arn}/invocations
   ConnectRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
@@ -454,6 +474,20 @@ Resources:
         - Key: Name
           Value: DigitizeConnections
       TableName: DigitizeConnections
+  DefaultFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: websocket_api/default/post.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Tracing: Active
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: DigitizeConnections
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:

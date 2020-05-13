@@ -18,6 +18,7 @@ Parameters:
 Globals:
   Function:
     AutoPublishAlias: live
+    Tracing: Active
     Environment:
       Variables:
         STUDENTS_TABLE : !Ref DigitizeStudents
@@ -52,7 +53,6 @@ Resources:
       Handler: api/options.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -72,7 +72,6 @@ Resources:
       Handler: api/students/get.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -91,7 +90,6 @@ Resources:
       Handler: api/students/post.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -110,7 +108,6 @@ Resources:
       Handler: api/students/cardid/get.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -129,7 +126,6 @@ Resources:
       Handler: api/students/studentid/get.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -149,7 +145,6 @@ Resources:
       Handler: api/checkins/active/get.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -168,7 +163,6 @@ Resources:
       Handler: api/checkins/post.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -187,7 +181,6 @@ Resources:
       Handler: api/checkins/active/cardreaderid/get.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -206,7 +199,6 @@ Resources:
       Handler: api/checkins/active/cardid/get.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -225,7 +217,6 @@ Resources:
       Handler: api/checkins/inactive/get.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -244,7 +235,6 @@ Resources:
       Handler: api/checkout/post.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -480,7 +470,6 @@ Resources:
       Handler: websocket_api/default/post.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -533,7 +522,6 @@ Resources:
       Handler: websocket_api/sendmessage/post.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Role:
         Fn::GetAtt:
           - LambdaExecutionRole
@@ -567,7 +555,6 @@ Resources:
       Handler: broadcast.handler
       Runtime: python3.7
       MemorySize: 128
-      Tracing: Active
       Timeout: 20
       Role:
         Fn::GetAtt:

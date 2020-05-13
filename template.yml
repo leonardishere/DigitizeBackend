@@ -457,7 +457,7 @@ Resources:
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: api/onconnect/
+      CodeUri: websocket_api/onconnect/
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs12.x
@@ -476,7 +476,7 @@ Resources:
   OnDisconnectFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: api/ondisconnect/
+      CodeUri: websocket_api/ondisconnect/
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs12.x
@@ -496,7 +496,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: SendMessageFunction
-      Handler: api/sendmessage/post.handler
+      Handler: websocket_api/sendmessage/post.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active

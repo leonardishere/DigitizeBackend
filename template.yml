@@ -49,7 +49,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeOptions
-      Handler: api/options.handler
+      Handler: rest_api/options.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -69,7 +69,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeStudentsGetAll
-      Handler: api/students/get.handler
+      Handler: rest_api/students/get.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -88,7 +88,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeStudentsPost
-      Handler: api/students/post.handler
+      Handler: rest_api/students/post.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -107,7 +107,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeStudentsGetCardID
-      Handler: api/students/cardid/get.handler
+      Handler: rest_api/students/cardid/get.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -126,7 +126,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeStudentsGetStudentID
-      Handler: api/students/studentid/get.handler
+      Handler: rest_api/students/studentid/get.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -146,7 +146,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeCheckinsActiveGetAll
-      Handler: api/checkins/active/get.handler
+      Handler: rest_api/checkins/active/get.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -165,7 +165,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeCheckinsActivePost
-      Handler: api/checkins/post.handler
+      Handler: rest_api/checkins/post.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -184,7 +184,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeCheckinsActiveGetCardReaderID
-      Handler: api/checkins/active/cardreaderid/get.handler
+      Handler: rest_api/checkins/active/cardreaderid/get.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -203,7 +203,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeCheckinsActiveGetCardID
-      Handler: api/checkins/active/cardid/get.handler
+      Handler: rest_api/checkins/active/cardid/get.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -222,7 +222,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeCheckinsInactiveGetAll
-      Handler: api/checkins/inactive/get.handler
+      Handler: rest_api/checkins/inactive/get.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -241,7 +241,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: DigitizeCheckoutAll
-      Handler: api/checkout/post.handler
+      Handler: rest_api/checkout/post.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active
@@ -457,7 +457,7 @@ Resources:
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: onconnect/
+      CodeUri: websocket_api/onconnect/
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs12.x
@@ -476,7 +476,7 @@ Resources:
   OnDisconnectFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ondisconnect/
+      CodeUri: websocket_api/ondisconnect/
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs12.x
@@ -496,7 +496,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: SendMessageFunction
-      Handler: sendmessage/post.handler
+      Handler: websocket_api/sendmessage/post.handler
       Runtime: python3.7
       MemorySize: 128
       Tracing: Active

@@ -477,6 +477,15 @@ Resources:
       Policies:
       - DynamoDBCrudPolicy:
           TableName: DigitizeConnections
+  DefaultPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - DigitizeWebSocketAPI
+      - DefaultFunction
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref DefaultFunction
+      Principal: apigateway.amazonaws.com
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:

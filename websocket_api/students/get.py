@@ -23,8 +23,11 @@ def get_students():
     return {
         'statusCode': 200,
         'body': json.dumps({
-            'message': 'getstudents',
-            'data': data
+            'msg': 'Received students data',
+            'msgType': 'ignore',
+            'data': {
+                'students': data
+            }
         }),
         'headers': headers
     }

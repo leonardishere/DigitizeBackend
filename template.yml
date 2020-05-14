@@ -487,6 +487,7 @@ Resources:
   DefaultFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: DigitizeWebsocketDefaultFunction
       Handler: websocket_api/default/post.handler
       Runtime: python3.7
       MemorySize: 128
@@ -509,6 +510,7 @@ Resources:
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: DigitizeWebsocketOnConnectFunction
       CodeUri: websocket_api/onconnect/
       Handler: app.handler
       MemorySize: 256
@@ -528,6 +530,7 @@ Resources:
   OnDisconnectFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: DigitizeWebsocketOnDisconnectFunction
       CodeUri: websocket_api/ondisconnect/
       Handler: app.handler
       MemorySize: 256
@@ -547,7 +550,7 @@ Resources:
   SendMessageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: SendMessageFunction
+      FunctionName: DigitizeWebsocketSendMessageFunction
       Handler: websocket_api/sendmessage/post.handler
       Runtime: python3.7
       MemorySize: 128
@@ -579,6 +582,7 @@ Resources:
   PingFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: DigitizeWebsocketPingFunction
       Handler: websocket_api/ping/get.handler
       Runtime: python3.7
       MemorySize: 128
@@ -601,7 +605,7 @@ Resources:
   BroadcastFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: Broadcast
+      FunctionName: DigitizeBroadcastFunction
       Handler: broadcast.handler
       Runtime: python3.7
       MemorySize: 128

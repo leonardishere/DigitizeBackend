@@ -592,6 +592,27 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref PingFunction
       Principal: apigateway.amazonaws.com
+  # Get Students Route
+  GetStudentsRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref DigitizeWebSocketAPI
+      RouteKey: getstudents
+      AuthorizationType: NONE
+      OperationName: GetStudents
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref GetStudentsInteg
+  GetStudentsInteg:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref DigitizeWebSocketAPI
+      Description: Get Students Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DigitizeStudentsGetAll.Arn}/invocations
   # Broadcast
   BroadcastFunction:
     Type: AWS::Serverless::Function

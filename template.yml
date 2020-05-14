@@ -456,9 +456,11 @@ Resources:
   Deployment:
     Type: AWS::ApiGatewayV2::Deployment
     DependsOn:
+    - DefaultRoute
     - ConnectRoute
-    - SendRoute
     - DisconnectRoute
+    - SendRoute
+    - PingRoute
     Properties:
       ApiId: !Ref DigitizeWebSocketAPI
   GWStage:

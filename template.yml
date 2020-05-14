@@ -434,26 +434,6 @@ Resources:
       IntegrationUri:
         Fn::Sub:
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OnConnectFunction.Arn}/invocations
-    OnConnectFunction:
-      Type: AWS::Serverless::Function
-      Properties:
-        FunctionName: DigitizeWebsocketConnectFunction
-        CodeUri: websocket_api/onconnect/
-        Handler: app.handler
-        MemorySize: 256
-        Runtime: nodejs12.x
-        Policies:
-        - DynamoDBCrudPolicy:
-            TableName: DigitizeConnections
-    OnConnectPermission:
-      Type: AWS::Lambda::Permission
-      DependsOn:
-        - DigitizeWebSocketAPI
-        - OnConnectFunction
-      Properties:
-        Action: lambda:InvokeFunction
-        FunctionName: !Ref OnConnectFunction
-        Principal: apigateway.amazonaws.com
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:

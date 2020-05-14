@@ -612,7 +612,30 @@ Resources:
       IntegrationType: AWS_PROXY
       IntegrationUri:
         Fn::Sub:
-            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${StudentsGetAllFunction.Arn}/invocations
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetStudentsWS.Arn}/invocations
+  GetStudentsWSFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DigitizeWSGetStudents
+      Handler: websocket_api/students/get.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: DigitizeConnections
+  GetStudentsPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - DigitizeWebSocketAPI
+      - GetStudentsWSFunction
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref GetStudentsWSFunction
+      Principal: apigateway.amazonaws.com
   # Broadcast
   BroadcastFunction:
     Type: AWS::Serverless::Function

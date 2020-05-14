@@ -437,7 +437,7 @@ Resources:
     Type: AWS::ApiGatewayV2::Route
     Properties:
       ApiId: !Ref DigitizeWebSocketAPI
-      RouteKey: $default
+      RouteKey: ping
       AuthorizationType: NONE
       OperationName: Ping
       Target: !Join

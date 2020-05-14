@@ -1,12 +1,14 @@
 import json
 import boto3
 import os
+import traceback
 import sys
 sys.path.append('dependencies') # local location of dependencies
 from myawscurl import myawscurl # awscurl modified
 
 CONNECTIONS_TABLE = os.environ['CONNECTIONS_TABLE']
 dynamodb_client = boto3.client('dynamodb', region_name='us-west-2')
+DEBUG = False
 
 def get_connections():
     connections = dynamodb_client.scan(TableName=CONNECTIONS_TABLE)['Items']
@@ -29,6 +31,8 @@ def broadcast(message, connections):
             }
             myawscurl(kwargs)
         except Exception as e:
+            if DEBUG:
+                traceback.print_exc()
             bad_connections.append(connection)
             errors.append(str(e))
     return bad_connections, errors
@@ -45,4 +49,7 @@ def handler(event, context):
     message = event['Records'][0]['Sns']['Message']
     connections = get_connections()
     bad_connections, errors = broadcast(message, connections)
+    if DEBUG:
+        print('bad connections:', bad_connections)
+        print('errors:', errors)
     trim_bad_connections(bad_connections)

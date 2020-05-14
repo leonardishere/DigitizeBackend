@@ -636,6 +636,49 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref GetStudentsWebsocketFunction
       Principal: apigateway.amazonaws.com
+  # Get Active Checkins Route
+  GetActiveCheckinsRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref DigitizeWebSocketAPI
+      RouteKey: getstudents
+      AuthorizationType: NONE
+      OperationName: GetActiveCheckins
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref GetActiveCheckinsInteg
+  GetActiveCheckinsInteg:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref DigitizeWebSocketAPI
+      Description: Get ActiveCheckins Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetActiveCheckinsWebsocketFunction.Arn}/invocations
+  GetActiveCheckinsWebsocketFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DigitizeWebSocketGetActiveCheckins
+      Handler: websocket_api/checkins/active/get.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: DigitizeConnections
+  GetActiveCheckinsPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - DigitizeWebSocketAPI
+      - GetActiveCheckinsWebsocketFunction
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref GetActiveCheckinsWebsocketFunction
       Principal: apigateway.amazonaws.com
   # Broadcast
   BroadcastFunction:

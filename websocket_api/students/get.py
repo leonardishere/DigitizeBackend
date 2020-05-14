@@ -22,13 +22,13 @@ def get_students():
     data = [student.to_dict() for student in arr]
     return {
         'statusCode': 200,
-        'body': json.dumps({
+        'body': json.dumps([{
             'msg': 'Received students data',
             'msgType': 'ignore',
             'data': {
                 'students': data
             }
-        }),
+        }]),
         'headers': headers
     }
 

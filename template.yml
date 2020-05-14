@@ -610,6 +610,15 @@ Resources:
         Fn::GetAtt:
           - LambdaExecutionRole
           - Arn
+  BroadcastPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - BroadcastTopic
+      - BroadcastFunction
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref BroadcastFunction
+      Principal: sns.amazonaws.com
   BroadcastTopic:
     Type: AWS::SNS::Topic
     Properties:

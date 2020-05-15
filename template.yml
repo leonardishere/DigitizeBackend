@@ -641,7 +641,7 @@ Resources:
     Type: AWS::ApiGatewayV2::Route
     Properties:
       ApiId: !Ref DigitizeWebSocketAPI
-      RouteKey: getstudents
+      RouteKey: getactivecheckins
       AuthorizationType: NONE
       OperationName: GetActiveCheckins
       Target: !Join

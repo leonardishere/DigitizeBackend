@@ -724,6 +724,36 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref GetInactiveCheckinsWebsocketFunction
       Principal: apigateway.amazonaws.com
+  # Checkout
+  CheckoutRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref DigitizeWebSocketAPI
+      RouteKey: checkout
+      AuthorizationType: NONE
+      OperationName: Default
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref CheckoutInteg
+  CheckoutInteg:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref DigitizeWebSocketAPI
+      Description: Checkout Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CheckoutAllFunction.Arn}/invocations
+  CheckoutPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - DigitizeWebSocketAPI
+      - CheckoutAllFunction
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref CheckoutAllFunction
+      Principal: apigateway.amazonaws.com
   # Broadcast
   BroadcastFunction:
     Type: AWS::Serverless::Function

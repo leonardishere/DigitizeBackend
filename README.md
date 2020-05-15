@@ -15,7 +15,7 @@ This repository holds the backend of the site.
 - AWS DynamoDB
 - AWS CodePipeline
 - AWS CloudFormation
-- WebSockets (coming soon)
+- WebSockets
 
 #### Todo list:
 - [ ] Add more explanation to the README
@@ -41,11 +41,13 @@ This repository holds the backend of the site.
       - [x] Get /checkins/inactive/
   - [x] Checkout
     - [x] POST /checkout/
-- [ ] Create WebSocket API
+- [x] Create WebSocket API
 - [ ] Test
+- [ ] Create Documentation
 
 #### Future work:
 - More than one classroom/school
 - More detailed attendance analysis
 - Automated attendance grading
 - Connect to SCU Students database
+- Staff login

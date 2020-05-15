@@ -27,7 +27,7 @@ def get_active_checkins():
             'msg': 'Received active checkins data',
             'msgType': 'ignore',
             'data': {
-                'students': data
+                'active_checkins': data
             }
         }]),
         'headers': headers

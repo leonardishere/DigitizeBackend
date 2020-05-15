@@ -680,6 +680,50 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref GetActiveCheckinsWebsocketFunction
       Principal: apigateway.amazonaws.com
+  # Get Inactive Checkins Route
+  GetInactiveCheckinsRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref DigitizeWebSocketAPI
+      RouteKey: getinactivecheckins
+      AuthorizationType: NONE
+      OperationName: GetInactiveCheckins
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref GetInactiveCheckinsInteg
+  GetInactiveCheckinsInteg:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref DigitizeWebSocketAPI
+      Description: Get InactiveCheckins Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetInactiveCheckinsWebsocketFunction.Arn}/invocations
+  GetInactiveCheckinsWebsocketFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DigitizeWebSocketGetInactiveCheckins
+      Handler: websocket_api/checkins/inactive/get.handler
+      Runtime: python3.7
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: DigitizeConnections
+  GetInactiveCheckinsPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - DigitizeWebSocketAPI
+      - GetInactiveCheckinsWebsocketFunction
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref GetInactiveCheckinsWebsocketFunction
+      Principal: apigateway.amazonaws.com
   # Broadcast
   BroadcastFunction:
     Type: AWS::Serverless::Function

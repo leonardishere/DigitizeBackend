@@ -1,6 +1,6 @@
 # Digitize
 
-This project began as the SCU COEN 315 - Web Architecture and Protocols final project. Not surprisingly, it was abandoned the day after it was submitted for a grade. It has since turned into an exercise in converting a serverful web app into its serverless equivalent.
+This project began as the SCU COEN 315 - Web Architecture and Protocols final project. Not surprisingly, it was abandoned the day after it was submitted for a grade. It has since turned into an exercise in converting a serverful web app into its serverless equivalent using AWS managed services.
 
 This repository holds the backend of the site.
 
@@ -21,7 +21,6 @@ This repository holds the backend of the site.
 - [ ] Add more explanation to the README
 - [x] Create CI/CD Pipeline
 - [x] Migrate from EC2 LAMP instance to API Gateway, Lambda, DynamoDB
-- [x] Enable CORS
 - [x] Create resources
   - [x] Students
     - [x] Students Table
@@ -42,8 +41,9 @@ This repository holds the backend of the site.
   - [x] Checkout
     - [x] POST /checkout/
 - [x] Create WebSocket API
+- [ ] Migrate API to Swagger
 - [ ] Test
-- [ ] Create Documentation
+- [ ] Create documentation, architecture diagrams
 
 #### Future work:
 - More than one classroom/school

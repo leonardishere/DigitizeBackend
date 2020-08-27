@@ -13,7 +13,7 @@ phases:
       #- pip3 install awscurl          # install awscurl
       #- pip3 install hashlib
       #- pip3 install hmac
-      - pip3 install pprint
+      #- pip3 install pprint
       - pip3 install requests
   pre_build:
     commands:

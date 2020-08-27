@@ -8,7 +8,7 @@ import datetime
 import hashlib
 import hmac
 import os
-import pprint
+#import pprint
 import sys
 import re
 import requests
@@ -42,8 +42,8 @@ IS_VERBOSE = False
 def __log(*args, **kwargs):
     if not IS_VERBOSE:
         return
-    stderr_pp = pprint.PrettyPrinter(stream=sys.stderr)
-    stderr_pp.pprint(*args, **kwargs)
+    #stderr_pp = pprint.PrettyPrinter(stream=sys.stderr)
+    #stderr_pp.pprint(*args, **kwargs)
 
 
 def url_path_to_dict(path):

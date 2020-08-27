@@ -4,11 +4,11 @@ This project began as the SCU COEN 315 - Web Architecture and Protocols final pr
 
 This repository holds the backend of the site.
 
-#### External links:
+### External links:
 - [Website](https://digitize.aleonard.dev)
 - [Frontend repository](https://github.com/leonardishere/DigitizeFrontend)
 
-#### Technologies used:
+### Technologies used:
 - Python 3.7
 - AWS API Gateway
 - AWS Lambda
@@ -17,8 +17,12 @@ This repository holds the backend of the site.
 - AWS CloudFormation
 - WebSockets
 
-#### Todo list:
-- [ ] Add more explanation to the README
+### Architecture
+Below is a high-level architecture diagram for Digitize.
+This repository includes the API Gateway, Lambda functions, DynamoDB tables, and the Route 53 DNS entries to access the API. Infrastructure and code are continuously integrated and deployed with CodeStar.
+![Architecture](images/Digitize_Architecture.svg)
+
+### Todo list:
 - [x] Create CI/CD Pipeline
 - [x] Migrate from EC2 LAMP instance to API Gateway, Lambda, DynamoDB
 - [x] Create resources
@@ -41,11 +45,12 @@ This repository holds the backend of the site.
   - [x] Checkout
     - [x] POST /checkout/
 - [x] Create WebSocket API
+- [x] Add architecture diagram to the README
 - [ ] Migrate API to Swagger
 - [ ] Test
-- [ ] Create documentation, architecture diagrams
+- [ ] Create API documentation
 
-#### Future work:
+### Future work:
 - More than one classroom/school
 - More detailed attendance analysis
 - Automated attendance grading
